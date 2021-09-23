@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID} from "@env"
 
 import { firebase } from '@firebase/app'
 
@@ -22,12 +23,11 @@ import thunk from 'redux-thunk'
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDOYgtC8n6XerqRL5MbbSUibig8UXj2yxo",
-  authDomain: "medizen-acf96.firebaseapp.com",
-  projectId: "medizen-acf96",
-  storageBucket: "medizen-acf96.appspot.com",
-  messagingSenderId: "790857921926",
-  appId: "1:790857921926:web:753a001ce12532b1f56807"
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSENGING_SENDER_ID,
+  appId: APP_ID
 };
 
 if (firebase.apps.length === 0) {
