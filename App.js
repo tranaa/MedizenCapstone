@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
-import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID} from "@env"
+import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID } from "@env"
 
 import { firebase } from '@firebase/app'
 
@@ -40,16 +40,16 @@ if (firebase.apps.length === 0) {
 const Stack = createStackNavigator()
 
 export class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       load: false
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
-      if(!user){
+      if (!user) {
         this.setState({
           loggedIn: false,
           loaded: true
@@ -65,8 +65,8 @@ export class App extends Component {
 
   render() {
     const { loggedIn, loaded } = this.state;
-    if(!loaded){
-      return(
+    if (!loaded) {
+      return (
         <SafeAreaView style={styles.loadingContainer}>
           <Image
             source={require('./assets/zenpear.png')}
@@ -77,13 +77,13 @@ export class App extends Component {
       )
     }
 
-    if(!loggedIn){
+    if (!loggedIn) {
       return (
         <SafeAreaView style={styles.container}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} navigation={this.props.navigation}/>
+              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} navigation={this.props.navigation} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaView>
@@ -95,16 +95,16 @@ export class App extends Component {
         <Provider store={store}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Main">
-              <Stack.Screen name="Main" component={MainScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
+              <Stack.Screen name="Main" component={MainScreen} navigation={this.props.navigation} />
+              <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation} />
+              <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} />
+              <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
       </SafeAreaView>
     );
-    
+
   }
 }
 
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 50,
     backgroundColor: 'white',
-    height:'100%',
+    height: '100%',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   }
 });
