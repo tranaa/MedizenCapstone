@@ -1,6 +1,7 @@
    
 import React, { useState, useEffect } from 'react'
 import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
+import MediCard from '../../components/MedCard';
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -108,19 +109,19 @@ function Profile(props) {
             </View>
             <View style={styles.containerGallery}>
                 <FlatList
-                    numColumns={3}
+                    numColumns={1}
                     horizontal={false}
                     data={userPosts}
                     renderItem={({ item }) => (
-                        <View
-                            style={styles.containerImage}>
+                        // <View
+                        //     style={styles.containerImage}>
 
-                            <Image
-                                style={styles.image}
-                                source={{ uri: item.downloadURL }}
-                            />
-                        </View>
-
+                        //     <Image
+                        //         style={styles.image}
+                        //         source={{ uri: item.downloadURL }}
+                        //     />
+                        // </View>
+                        <MediCard />
                     )}
 
                 />
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     containerImage: {
-        flex: 1 / 3
+        flex: 1
     },
     image: {
         flex: 1,

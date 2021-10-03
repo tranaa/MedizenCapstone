@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
+import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView } from 'react-native'
+import MediCard from '../../components/MedCard';
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -40,44 +41,45 @@ function Feed(props) {
     }
     
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
                     data={posts}
                     renderItem={({ item }) => (
-                        <View
-                            style={styles.containerImage}>
-                            <Text style={styles.container}>{item.user.name}</Text>
-                            <Image
-                                style={styles.image}
-                                source={{ uri: item.downloadURL }}
-                            />
-                            { item.currentUserLike ?
-                                (
-                                    <Button
-                                        title="Dislike"
-                                        onPress={() => onDislikePress(item.user.uid, item.id)} />
-                                )
-                                :
-                                (
-                                    <Button
-                                        title="Like"
-                                        onPress={() => onLikePress(item.user.uid, item.id)} />
-                                )
-                            }
-                            <Text
-                                onPress={() => props.navigation.navigate('Comment', { image: item.downloadURL, postId: item.id, uid: item.user.uid })}>
-                                View Comments...
-                            </Text>
-                        </View>
+                        <MediCard />
+                        // <View
+                        //     style={styles.containerImage}>
+                        //     <Text style={styles.container}>{item.user.name}</Text>
+                        //     <Image
+                        //         style={styles.image}
+                        //         source={{ uri: item.downloadURL }}
+                        //     />
+                        //     { item.currentUserLike ?
+                        //         (
+                        //             <Button
+                        //                 title="Dislike"
+                        //                 onPress={() => onDislikePress(item.user.uid, item.id)} />
+                        //         )
+                        //         :
+                        //         (
+                        //             <Button
+                        //                 title="Like"
+                        //                 onPress={() => onLikePress(item.user.uid, item.id)} />
+                        //         )
+                        //     }
+                        //     <Text
+                        //         onPress={() => props.navigation.navigate('Comment', { image: item.downloadURL, postId: item.id, uid: item.user.uid })}>
+                        //         View Comments...
+                        //     </Text>
+                        // </View>
 
                     )}
 
                 />
             </View>
-        </View>
+        </ScrollView>
 
     )
 }
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
     },
     containerImage: {
         flex: 1
-
     },
     image: {
         flex: 1,
