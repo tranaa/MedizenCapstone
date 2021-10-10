@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, TextInput, StyleSheet, Dimensions} from 'react-native';
+import { View, TextInput, StyleSheet, Dimensions } from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
+const FormInput = ({ labelValue, placeholderText, iconType, ...rest }) => {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconStyle}>
