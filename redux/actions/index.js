@@ -1,8 +1,8 @@
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
+import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
 import firebase from 'firebase'
 import { SnapshotViewIOSComponent } from 'react-native'
 require('firebase/firestore')
-
+import { collection, query, where } from "firebase/firestore";
 
 export function clearData() {
     return ((dispatch) => {
@@ -127,7 +127,6 @@ export function fetchUsersFollowingLikes(uid, postId) {
             .collection("likes")
             .doc(firebase.auth().currentUser.uid)
             .onSnapshot((snapshot) => {
-                console.log({test:snapshot._.S_.path})
                 const postId = snapshot._.S_.path.segments[3];
 
                 let currentUserLike = false;
@@ -136,6 +135,27 @@ export function fetchUsersFollowingLikes(uid, postId) {
                 }
 
                 dispatch({ type: USERS_LIKES_STATE_CHANGE, postId, currentUserLike })
+            })
+    })
+}
+
+export function fetchUserMeds() {
+    return ((dispatch) => {
+        firebase.firestore()
+            .collection("medications")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userMedications")
+            .orderBy("creation", "asc")
+            .get()
+            .then((snapshot) => {
+                let medicines = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return { 
+                        id, ...data 
+                    }
+                })
+                dispatch({ type: USER_MEDICINES_STATE_CHANGE, medicines })
             })
     })
 }

@@ -1,7 +1,8 @@
    
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button } from 'react-native'
+import { Dimensions, StyleSheet, View, Text, Image, FlatList } from 'react-native'
 import MediCard from '../../components/MedCard';
+import { Button  } from 'react-native-elements'
 
 import firebase from 'firebase'
 require('firebase/firestore')
@@ -12,7 +13,6 @@ function Profile(props) {
     const [user, setUser] = useState(null);
     const [following, setFollowing] = useState(false)
     const { currentUser, posts } = props;
-    console.log({test: props.following})
     useEffect(() => {
         const { currentUser, posts } = props;
 
@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
-    following: store.userState.following
+    following: store.userState.following,
+    medicines: store.userState.medicines
 })
 
 export default connect(mapStateToProps, null)(Profile)

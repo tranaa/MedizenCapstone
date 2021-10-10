@@ -53,7 +53,7 @@ export class Login extends Component {
       return (
           <ScrollView contentContainerStyle={styles.container}>
                 <Image
-                  source={require('../../assets/medizen.png')}
+                  source={require('../../assets/zenpear.png')}
                   style={styles.logo}
               />
               <FormInput

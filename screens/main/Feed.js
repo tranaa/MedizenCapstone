@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView } from 'react-native'
+import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView, ActivityIndicator, Platform, SafeAreaView } from 'react-native'
 import MediCard from '../../components/MedCard';
 
 import firebase from 'firebase'
@@ -8,75 +8,42 @@ import { connect } from 'react-redux'
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
+    const [meds, setMeds] = useState([]);
+    const [loading, setLoading] = useState(true);
+    // useEffect(() => {
+    //     if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
+    //         props.feed.sort(function (x, y) {
+    //             return x.creation - y.creation;
+    //         })
+    //         setPosts(props.feed);
+    //     }
+    // }, [props.usersFollowingLoaded, props.feed])
 
     useEffect(() => {
-        console.log({props})
-        if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
-            props.feed.sort(function (x, y) {
-                return x.creation - y.creation;
-            })
-            setPosts(props.feed);
+        if (props.medicines.length !== 0) {
+            setMeds(props.medicines);
+            setLoading(false);
         }
-    }, [props.usersFollowingLoaded, props.feed])
+    }, [props.medicines])
 
-    const onLikePress = (userId, postId) => {
-        firebase.firestore()
-            .collection("posts")
-            .doc(userId)
-            .collection("userPosts")
-            .doc(postId)
-            .collection("likes")
-            .doc(firebase.auth().currentUser.uid)
-            .set({})
+    if(loading && props.medicines != 0) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#00ff00" />
+            </SafeAreaView>
+        )
     }
-    const onDislikePress = (userId, postId) => {
-        firebase.firestore()
-            .collection("posts")
-            .doc(userId)
-            .collection("userPosts")
-            .doc(postId)
-            .collection("likes")
-            .doc(firebase.auth().currentUser.uid)
-            .delete()
-    }
-    
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
-                    data={posts}
-                    renderItem={({ item }) => (
-                        <MediCard />
-                        // <View
-                        //     style={styles.containerImage}>
-                        //     <Text style={styles.container}>{item.user.name}</Text>
-                        //     <Image
-                        //         style={styles.image}
-                        //         source={{ uri: item.downloadURL }}
-                        //     />
-                        //     { item.currentUserLike ?
-                        //         (
-                        //             <Button
-                        //                 title="Dislike"
-                        //                 onPress={() => onDislikePress(item.user.uid, item.id)} />
-                        //         )
-                        //         :
-                        //         (
-                        //             <Button
-                        //                 title="Like"
-                        //                 onPress={() => onLikePress(item.user.uid, item.id)} />
-                        //         )
-                        //     }
-                        //     <Text
-                        //         onPress={() => props.navigation.navigate('Comment', { image: item.downloadURL, postId: item.id, uid: item.user.uid })}>
-                        //         View Comments...
-                        //     </Text>
-                        // </View>
-
+                    data={meds}
+                    renderItem={({item}) => (
+                        <MediCard medication={item} />
                     )}
-
                 />
             </View>
         </ScrollView>
@@ -101,6 +68,13 @@ const styles = StyleSheet.create({
         flex: 1,
         aspectRatio: 1 / 1,
         height: Dimensions.get('window').width,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        height: Dimensions.get('window').height,
     }
 })
 const mapStateToProps = (store) => ({
@@ -108,5 +82,6 @@ const mapStateToProps = (store) => ({
     following: store.userState.following,
     feed: store.usersState.feed,
     usersFollowingLoaded: store.usersState.usersFollowingLoaded,
+    medicines: store.userState.medicines
 })
 export default connect(mapStateToProps, null)(Feed);

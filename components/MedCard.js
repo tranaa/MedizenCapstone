@@ -5,13 +5,14 @@ import { Card, ListItem, Button, Icon } from 'react-native-elements'
 
 const MedCard = (props) => {
   const { medication = {
-    name: "Kitty Cat",
+    medName: "Kitty Cat",
     dosage: "2 Hugs",
-    quantity: "2",
+    frequency: "2",
     description: "Anxiety medication",
     image: "https://i.imgur.com/g3D5jNz.jpg"
   }, onPress = () => {} } = props;
-  const { dosage, image, name, quantity, description } = medication;
+  const { dosage, medName, frequency, description } = medication;
+  const image = "https://i.imgur.com/g3D5jNz.jpg";
   return (
     <TouchableOpacity onPress={onPress}>
       <Card class="med-card" elevation={7}>
@@ -21,13 +22,13 @@ const MedCard = (props) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.header}>
-              {name}
+              {medName}
             </Text>
             <Text style={styles.paragraph}>
               {description}
             </Text>
             <Text style={styles.paragraph}>
-              {quantity} x {dosage}
+              {frequency} x {dosage}
             </Text>
           </View>
         </View>

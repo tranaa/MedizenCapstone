@@ -4,8 +4,10 @@ import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, 
 
 import { firebase } from '@firebase/app'
 
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { ThemeProvider } from 'react-native-elements';
+
 
 import RegisterScreen from './screens/auth/Register'
 import LoginScreen from './screens/auth/Login'
@@ -13,6 +15,7 @@ import MainScreen from './screens/Main'
 import AddScreen from './screens/main/Add'
 import SaveScreen from './screens/main/Save'
 import CommentScreen from './screens/main/Comments'
+import { MyTheme } from './styles'
 
 
 import { initializeApp } from "firebase/app";
@@ -92,16 +95,17 @@ export class App extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <Provider store={store}>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Main">
-              <Stack.Screen name="Main" component={MainScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
-              <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
-            </Stack.Navigator>
-          </NavigationContainer>
-        </Provider>
+        <ThemeProvider theme={MyTheme} > 
+          <Provider store={store}>
+            <NavigationContainer theme={MyTheme}>
+              <Stack.Navigator initialRouteName="Medizen">
+                <Stack.Screen name="Medizen" component={MainScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </Provider>
+        </ThemeProvider>
       </SafeAreaView>
     );
     
