@@ -86,26 +86,6 @@ function Profile(props) {
             <View style={styles.containerInfo}>
                 <Text>{user.name}</Text>
                 <Text>{user.email}</Text>
-                {props.route.params.uid !== firebase.auth().currentUser.uid ? (
-                    <View>
-                        {following ? (
-                            <Button
-                                title="unfollow"
-                                onPress={() => onUnfollow()}
-                            />
-                        ) :
-                            (
-                                <Button
-                                    title="Follow"
-                                    onPress={() => onFollow()}
-                                />
-                            )}
-                    </View>
-                ) :
-                <Button
-                    title="Logout"
-                    onPress={() => onLogout()}
-                />}
             </View>
             <View style={styles.containerGallery}>
                 <FlatList

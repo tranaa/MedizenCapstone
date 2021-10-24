@@ -38,7 +38,12 @@ export class Main extends Component {
                                 <MaterialCommunityIcons name="home" color={color} size={26} />
                             ),
                         }} />
-                    <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
+                    <Tab.Screen name="Search" component={SearchScreen}
+                        listeners={({ navigation }) => ({
+                            tabPress: event => {
+                                event.preventDefault();
+                                navigation.navigate("Search", {uid: firebase.auth().currentUser.uid})
+                            }})}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="magnify" color={color} size={26} />

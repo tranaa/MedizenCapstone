@@ -47,7 +47,6 @@ function Feed(props) {
                 />
             </View>
         </ScrollView>
-
     )
 }
 
@@ -77,6 +76,7 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
     }
 })
+
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     following: store.userState.following,

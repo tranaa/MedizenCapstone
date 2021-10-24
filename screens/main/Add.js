@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 150,
-    fontSize: '18px',
+    fontSize: 18,
     justifyContent: "flex-start",
     borderBottomWidth: 1,
   },
