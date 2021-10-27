@@ -14,6 +14,7 @@ import LoginScreen from './screens/auth/Login'
 import MainScreen from './screens/Main'
 import AddScreen from './screens/main/Add'
 import SaveScreen from './screens/main/Save'
+import SearchScreen from './screens/main/Search'
 import CommentScreen from './screens/main/Comments'
 import { MyTheme } from './styles'
 
@@ -100,6 +101,7 @@ export class App extends Component {
             <NavigationContainer theme={MyTheme}>
               <Stack.Navigator initialRouteName="Medizen">
                 <Stack.Screen name="Medizen" component={MainScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
               </Stack.Navigator>

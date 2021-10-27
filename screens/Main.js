@@ -32,7 +32,7 @@ export class Main extends Component {
         return (
             <ThemeProvider theme={MyTheme}>
                 <Tab.Navigator initialRouteName="Feed" labeled={false}>
-                    <Tab.Screen name="Feed" component={FeedScreen} test={'hello'}
+                    <Tab.Screen name="Feed" component={FeedScreen}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="home" color={color} size={26} />
@@ -50,6 +50,11 @@ export class Main extends Component {
                             ),
                         }} />
                     <Tab.Screen name="Add" component={AddScreen}
+                        listeners={({ navigation }) => ({
+                            tabPress: event => {
+                                event.preventDefault();
+                                navigation.navigate("Add", {uid: firebase.auth().currentUser.uid})
+                            }})}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="plus-box" color={color} size={26} />

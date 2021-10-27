@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
 import { fetchUserMeds } from '../../redux/actions/index'
+import { isEmptyString } from '../../utils';
 
 
 export default function Add({ navigation }) {
@@ -13,9 +14,13 @@ export default function Add({ navigation }) {
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("")
   const [active, setActive] = useState(false)
+  const [nameError, setNameError] = useState("")
+  const [dosageError, setDosageError] = useState("")
+  const [freqError, setFreqError] = useState("")
   
   const addMedication = () => {
-    firebase.firestore()
+    if(validateForm()) {
+      firebase.firestore()
         .collection('medications')
         .doc(firebase.auth().currentUser.uid)
         .collection("userMedications")
@@ -28,56 +33,83 @@ export default function Add({ navigation }) {
           creation: firebase.firestore.FieldValue.serverTimestamp()
         }).then((function () {
           fetchUserMeds()
+          setNameError("")
+          setDosageError("")
+          setFreqError("")
           navigation.replace("Medizen")
         }))
+    }
+  }
+
+  const validateForm = () => {
+    var isValid = true;
+    if (isEmptyString(medName)){
+      setNameError("Please input medicine name")
+      isValid = false
+    }
+    if (isEmptyString(dosage)) {
+      setDosageError("Please input dosage")
+      isValid = false
+    }
+    if (isEmptyString(frequency)) {
+      setFreqError("Please input frequency")
+      isValid = false
+    }
+    return isValid
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headingContainer}>
-       <Text style={styles.header}>Medication</Text>
-      </View>
-      <Input
-        style={styles.input}
-        placeholder="Name"
-        onChangeText={medName => setMedName(medName)}
-      />
-      <Input
-        style={styles.input}
-        onChangeText={dosage => setDosage(dosage)}
-        placeholder="Dosage"
-      />
-      <Input
-        style={styles.input}
-        placeholder="How often is it taken?"
-        onChangeText={frequency => setFrequency(frequency)}
-      />
-      <View style={styles.textAreaContainer} >
-        <TextInput
-          style={styles.textArea}
-          underlineColorAndroid="transparent"
-          placeholder="What is it treating?"
-          multiline={true}
-          numberOfLines={2}
-          onChangeText={description => setDescription(description)}
+    <ScrollView contentContainerStyle={{flexGrow:1}}>
+      <View style={styles.container}>
+        <View style={styles.headingContainer}>
+        <Text style={styles.header}>Medication</Text>
+        </View>
+        <Input
+          style={styles.input}
+          placeholder="Name"
+          onChangeText={medName => setMedName(medName)}
+          errorMessage={nameError}
+        />
+        <Input
+          style={styles.input}
+          onChangeText={dosage => setDosage(dosage)}
+          placeholder="Dosage"
+          errorMessage={dosageError}
+        />
+        <Input
+          style={styles.input}
+          placeholder="How often is it taken?"
+          onChangeText={frequency => setFrequency(frequency)}
+          errorMessage={freqError}
+        />
+        <View style={styles.textAreaContainer} >
+          <TextInput
+            style={styles.textArea}
+            underlineColorAndroid="transparent"
+            placeholder="What is it treating?"
+            multiline={true}
+            numberOfLines={2}
+            onChangeText={description => setDescription(description)}
+          />
+        </View>
+        <View>
+        <CheckBox 
+          style={styles.checkbox}
+          title='Active Medication?'
+          checkedIcon='dot-circle-o'
+          uncheckedIcon='circle-o'
+          checked={active}
+          onPress={() => setActive(!active)}
+        />
+        </View>
+        
+        <Button
+          onPress={() => addMedication()}
+          title="Add Medication"
         />
       </View>
-      <View>
-      <CheckBox 
-        style={styles.checkbox}
-        title='Active Medication?'
-        checkedIcon='dot-circle-o'
-        uncheckedIcon='circle-o'
-        checked={active}
-        onPress={() => setActive(!active)}
-      />
-      </View>
-      
-      <Button
-        onPress={() => addMedication()}
-        title="Add Medication"
-      />
     </ScrollView>
+    
   );
 }
 
@@ -115,7 +147,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
     textAlign: 'left',
-    alignItems: 'left',
+    alignItems: 'flex-start',
   },
   headingContainer: {
     paddingHorizontal: 10,

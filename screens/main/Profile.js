@@ -1,6 +1,6 @@
    
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList } from 'react-native'
+import { Dimensions, StyleSheet, View, Text, Image, FlatList, ScrollView } from 'react-native'
 import MediCard from '../../components/MedCard';
 import { Button  } from 'react-native-elements'
 
@@ -9,16 +9,14 @@ require('firebase/firestore')
 import { connect } from 'react-redux'
 
 function Profile(props) {
-    const [userPosts, setUserPosts] = useState([]);
     const [user, setUser] = useState(null);
-    const [following, setFollowing] = useState(false)
-    const { currentUser, posts } = props;
-    useEffect(() => {
-        const { currentUser, posts } = props;
+    const [meds, setMeds] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const { currentUser } = props;
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
             setUser(currentUser)
-            setUserPosts(posts)
         }
         else {
             firebase.firestore()
@@ -33,45 +31,16 @@ function Profile(props) {
                         console.log('does not exist')
                     }
                 })
-            firebase.firestore()
-                .collection("posts")
-                .doc(props.route.params.uid)
-                .collection("userPosts")
-                .orderBy("creation", "asc")
-                .get()
-                .then((snapshot) => {
-                    let posts = snapshot.docs.map(doc => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        return { id, ...data }
-                    })
-                    setUserPosts(posts)
-                })
         }
+    }, [props.route.params.uid])
 
-        if (props.following.indexOf(props.route.params.uid) > -1) {
-            setFollowing(true);
-        } else {
-            setFollowing(false);
+    useEffect(() => {
+        if (props.medicines.length !== 0) {
+            let medsFiltered = props.medicines.filter(med => med.active)
+            setMeds(medsFiltered);
+            setLoading(false);
         }
-    }, [props.route.params.uid, props.following])
-
-    const onFollow = () => {
-        firebase.firestore()
-            .collection("following")
-            .doc(firebase.auth().currentUser.uid)
-            .collection("userFollowing")
-            .doc(props.route.params.uid)
-            .set({})
-    }
-    const onUnfollow = () => {
-        firebase.firestore()
-            .collection("following")
-            .doc(firebase.auth().currentUser.uid)
-            .collection("userFollowing")
-            .doc(props.route.params.uid)
-            .delete()
-    }
+    }, [props.medicines])
 
     const onLogout = () => {
         firebase.auth().signOut();
@@ -81,31 +50,37 @@ function Profile(props) {
         return <View />
     }
 
+    if(loading && props.medicines != 0) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#00ff00" />
+            </SafeAreaView>
+        )
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.containerInfo}>
                 <Text>{user.name}</Text>
                 <Text>{user.email}</Text>
-            </View>
-            <View style={styles.containerGallery}>
-                <FlatList
-                    numColumns={1}
-                    horizontal={false}
-                    data={userPosts}
-                    renderItem={({ item }) => (
-                        // <View
-                        //     style={styles.containerImage}>
-
-                        //     <Image
-                        //         style={styles.image}
-                        //         source={{ uri: item.downloadURL }}
-                        //     />
-                        // </View>
-                        <MediCard />
-                    )}
-
+                <Button
+                    title="Logout"
+                    onPress={() => onLogout()}
                 />
             </View>
+            
+            <ScrollView style={styles.containerGallery}>
+                <View style={styles.containerGallery}>
+                    <FlatList
+                        numColumns={1}
+                        horizontal={false}
+                        data={meds}
+                        renderItem={({item}) => (
+                            <MediCard medication={item} />
+                        )}
+                    />
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -119,7 +94,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     containerGallery: {
-        flex: 1
+        flex: 1,
     },
     containerImage: {
         flex: 1
@@ -133,8 +108,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    posts: store.userState.posts,
-    following: store.userState.following,
     medicines: store.userState.medicines
 })
 

@@ -7,21 +7,13 @@ require('firebase/firestore')
 import { connect } from 'react-redux'
 
 function Feed(props) {
-    const [posts, setPosts] = useState([]);
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
-    // useEffect(() => {
-    //     if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
-    //         props.feed.sort(function (x, y) {
-    //             return x.creation - y.creation;
-    //         })
-    //         setPosts(props.feed);
-    //     }
-    // }, [props.usersFollowingLoaded, props.feed])
 
     useEffect(() => {
         if (props.medicines.length !== 0) {
-            setMeds(props.medicines);
+            let medsFiltered = props.medicines.filter(med => med.active)
+            setMeds(medsFiltered);
             setLoading(false);
         }
     }, [props.medicines])
@@ -53,6 +45,7 @@ function Feed(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingBottom: 50
     },
     containerInfo: {
         margin: 20
@@ -79,9 +72,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    following: store.userState.following,
-    feed: store.usersState.feed,
-    usersFollowingLoaded: store.usersState.usersFollowingLoaded,
     medicines: store.userState.medicines
 })
 export default connect(mapStateToProps, null)(Feed);
