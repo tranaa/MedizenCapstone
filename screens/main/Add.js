@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform } from 'react-native';
-import { Button, Input, CheckBox  } from 'react-native-elements'
+import { Button, Input, CheckBox } from 'react-native-elements'
 import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
@@ -13,29 +13,29 @@ export default function Add({ navigation }) {
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("")
   const [active, setActive] = useState(false)
-  
+
   const addMedication = () => {
     firebase.firestore()
-        .collection('medications')
-        .doc(firebase.auth().currentUser.uid)
-        .collection("userMedications")
-        .add({
-          medName,
-          dosage,
-          frequency,
-          description,
-          active,
-          creation: firebase.firestore.FieldValue.serverTimestamp()
-        }).then((function () {
-          fetchUserMeds()
-          navigation.replace("Medizen")
-        }))
+      .collection('medications')
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userMedications")
+      .add({
+        medName,
+        dosage,
+        frequency,
+        description,
+        active,
+        creation: firebase.firestore.FieldValue.serverTimestamp()
+      }).then((function () {
+        fetchUserMeds()
+        navigation.replace("Medizen")
+      }))
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headingContainer}>
-       <Text style={styles.header}>Medication</Text>
+        <Text style={styles.header}>Medication</Text>
       </View>
       <Input
         style={styles.input}
@@ -63,16 +63,16 @@ export default function Add({ navigation }) {
         />
       </View>
       <View>
-      <CheckBox 
-        style={styles.checkbox}
-        title='Active Medication?'
-        checkedIcon='dot-circle-o'
-        uncheckedIcon='circle-o'
-        checked={active}
-        onPress={() => setActive(!active)}
-      />
+        <CheckBox
+          style={styles.checkbox}
+          title='Active Medication?'
+          checkedIcon='dot-circle-o'
+          uncheckedIcon='circle-o'
+          checked={active}
+          onPress={() => setActive(!active)}
+        />
       </View>
-      
+
       <Button
         onPress={() => addMedication()}
         title="Add Medication"
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
     textAlign: 'left',
-    alignItems: 'left',
+    alignItems: 'flex-start',
   },
   headingContainer: {
     paddingHorizontal: 10,
