@@ -19,7 +19,6 @@ export default function Add({ navigation }) {
 
 
 
-
   //function to add mood(It is from the onPress button)
   const addMood = () => {
     firebase.firestore()

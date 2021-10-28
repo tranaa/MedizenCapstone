@@ -1,18 +1,56 @@
    
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, ScrollView } from 'react-native'
+import { Dimensions, StyleSheet, View, Text, Image, FlatList, ScrollView, Touchable } from 'react-native'
 import MediCard from '../../components/MedCard';
 import { Button  } from 'react-native-elements'
+import * as Notifications from 'expo-notifications';
 
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function Profile(props) {
     const [user, setUser] = useState(null);
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        //notification handling when it is running in the background
+        const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(
+          (response) => {
+            //We can move to the specific screen
+            console.log(response);
+          }
+        );
+        //notification handling when it is running in the forebackground
+        const foregroundSubscription = Notifications.addNotificationReceivedListener(
+          (notification) => {
+            //We can move to the specific screen
+            console.log(notification);
+          }
+        );
+    
+        return () => {
+          //clear cache tokens
+          backgroundSubscription.remove();
+          foregroundSubscription.remove();
+        };
+      }, []);
+      const triggerNotificationHandler = () => {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'How are you doing today ?',
+            body: 'Please open the app to track your mood',
+            data: { mySpecialData: 'Some text' },
+          },
+          trigger: {
+            seconds:2,
+            
+            
+          },
+        });
+      };
     useEffect(() => {
         const { currentUser } = props;
         if (props.route.params.uid === firebase.auth().currentUser.uid) {
@@ -67,6 +105,12 @@ function Profile(props) {
                     title="Logout"
                     onPress={() => onLogout()}
                 />
+                <TouchableOpacity>
+                <Button
+                    title="send notification"
+                    onPress={triggerNotificationHandler}
+                />
+                </TouchableOpacity>
             </View>
             
             <ScrollView style={styles.containerGallery}>

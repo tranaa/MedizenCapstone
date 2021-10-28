@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import firebase from 'firebase'
+import * as Notifications from 'expo-notifications';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds } from '../redux/actions/index'
@@ -20,12 +21,18 @@ const EmptyScreen = () => {
 }
 
 export class Main extends Component {
+
+
     componentDidMount() {
         this.props.clearData();
         this.props.fetchUser();
         this.props.fetchUserPosts();
         this.props.fetchUserFollowing();
         this.props.fetchUserMeds();
+        async function registerForPushNotification() {
+            const {status} = await Permissions.getAsync(Permissions.Notifications);
+     
+          }
     }
     
     render() {

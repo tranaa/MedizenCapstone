@@ -8,7 +8,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { ThemeProvider } from 'react-native-elements';
 
-
+import * as Notifications from 'expo-notifications';
 import RegisterScreen from './screens/auth/Register'
 import LoginScreen from './screens/auth/Login'
 import MainScreen from './screens/Main'
@@ -44,11 +44,14 @@ if (firebase.apps.length === 0) {
 const Stack = createStackNavigator()
 
 export class App extends Component {
+
+
   constructor(props){
     super(props);
     this.state = {
       load: false
     }
+    
   }
 
   componentDidMount(){
@@ -62,6 +65,7 @@ export class App extends Component {
         this.setState({
           loggedIn: true,
           loaded: true
+          
         })
       }
     })
