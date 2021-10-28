@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import { fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds } from '../redux/actions/index'
 import { ThemeProvider } from 'react-native-elements';
 import { MyTheme } from '../styles';
-
+import MoodTracker from './main/Moodtracker'
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import AddScreen from './main/Add'
@@ -58,6 +58,12 @@ export class Main extends Component {
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="plus-box" color={color} size={26} />
+                            ),
+                        }} />
+                         <Tab.Screen name="moodtracker" component={MoodTracker}
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons name="heart" color={color} size={26} />
                             ),
                         }} />
                     <Tab.Screen name="Profile" component={ProfileScreen} 
