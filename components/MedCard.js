@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, StyleSheet, Dimensions, Text, Image, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Image, TouchableOpacity } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 
 const MedCard = (props) => {
@@ -10,7 +10,7 @@ const MedCard = (props) => {
     frequency: "2",
     description: "Anxiety medication",
     image: "https://i.imgur.com/g3D5jNz.jpg"
-  }, onPress = () => {} } = props;
+  }, onPress = () => { } } = props;
   const { dosage, medName, frequency, description } = medication;
   const image = "https://i.imgur.com/g3D5jNz.jpg";
   return (
@@ -18,7 +18,7 @@ const MedCard = (props) => {
       <Card class="med-card" elevation={7}>
         <View style={styles.infoContainer}>
           <View style={styles.imageContainer}>
-            <Image source={{uri:image}} style={styles.image}/>
+            <Image source={{ uri: image }} style={styles.image} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.header}>
@@ -43,8 +43,8 @@ export default MedCard;
 const styles = StyleSheet.create({
   image: {
     resizeMode: 'cover',
-    height: Dimensions.get('window').width/4,
-    width: Dimensions.get('window').width/4,
+    height: Dimensions.get('window').width / 4,
+    width: Dimensions.get('window').width / 4,
   },
   imageContainer: {
     flex: 1,

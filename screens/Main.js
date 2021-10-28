@@ -27,7 +27,7 @@ export class Main extends Component {
         this.props.fetchUserFollowing();
         this.props.fetchUserMeds();
     }
-    
+
     render() {
         return (
             <ThemeProvider theme={MyTheme}>
@@ -42,8 +42,9 @@ export class Main extends Component {
                         listeners={({ navigation }) => ({
                             tabPress: event => {
                                 event.preventDefault();
-                                navigation.navigate("Search", {uid: firebase.auth().currentUser.uid})
-                            }})}
+                                navigation.navigate("Search", { uid: firebase.auth().currentUser.uid })
+                            }
+                        })}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="magnify" color={color} size={26} />
@@ -55,12 +56,13 @@ export class Main extends Component {
                                 <MaterialCommunityIcons name="plus-box" color={color} size={26} />
                             ),
                         }} />
-                    <Tab.Screen name="Profile" component={ProfileScreen} 
+                    <Tab.Screen name="Profile" component={ProfileScreen}
                         listeners={({ navigation }) => ({
                             tabPress: event => {
                                 event.preventDefault();
-                                navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid})
-                            }})}
+                                navigation.navigate("Profile", { uid: firebase.auth().currentUser.uid })
+                            }
+                        })}
                         options={{
                             tabBarIcon: ({ color, size }) => (
                                 <MaterialCommunityIcons name="account-circle" color={color} size={26} />

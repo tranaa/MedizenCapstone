@@ -5,11 +5,20 @@ import MediCard from '../../components/MedCard';
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Touchable } from 'react-native';
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const { navigate } = props.navigation;
+
+    const clickCard = (name, dose, freq, desc, img) => {
+        console.log("it works: " + name);
+        navigate('Details', { medName: name, dosage: dose, frequency: freq, description: desc, image: img })
+    }
     // useEffect(() => {
     //     if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
     //         props.feed.sort(function (x, y) {
@@ -26,7 +35,7 @@ function Feed(props) {
         }
     }, [props.medicines])
 
-    if(loading && props.medicines != 0) {
+    if (loading && props.medicines != 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#00ff00" />
@@ -40,9 +49,12 @@ function Feed(props) {
                 <FlatList
                     numColumns={1}
                     horizontal={false}
+                    keyExtractor={(item) => item.id}
                     data={meds}
-                    renderItem={({item}) => (
-                        <MediCard medication={item} />
+                    renderItem={({ item }) => (
+                        <TouchableOpacity>
+                            <MediCard medication={item} onPress={() => clickCard(item.medName, item.dosage, item.frequency, item.description, item.image)} />
+                        </TouchableOpacity>
                     )}
                 />
             </View>
