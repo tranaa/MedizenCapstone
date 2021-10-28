@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
-import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID} from "@env"
+import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID } from "@env"
 
 import { firebase } from '@firebase/app'
 
@@ -16,6 +16,7 @@ import AddScreen from './screens/main/Add'
 import SaveScreen from './screens/main/Save'
 import SearchScreen from './screens/main/Search'
 import CommentScreen from './screens/main/Comments'
+import DetailsScreen from './screens/main/Details'
 import { MyTheme } from './styles'
 
 
@@ -44,16 +45,16 @@ if (firebase.apps.length === 0) {
 const Stack = createStackNavigator()
 
 export class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       load: false
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
-      if(!user){
+      if (!user) {
         this.setState({
           loggedIn: false,
           loaded: true
@@ -69,8 +70,8 @@ export class App extends Component {
 
   render() {
     const { loggedIn, loaded } = this.state;
-    if(!loaded){
-      return(
+    if (!loaded) {
+      return (
         <SafeAreaView style={styles.loadingContainer}>
           <Image
             source={require('./assets/zenpear.png')}
@@ -81,13 +82,13 @@ export class App extends Component {
       )
     }
 
-    if(!loggedIn){
+    if (!loggedIn) {
       return (
         <SafeAreaView style={styles.container}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} navigation={this.props.navigation}/>
+              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} navigation={this.props.navigation} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaView>
@@ -96,7 +97,7 @@ export class App extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <ThemeProvider theme={MyTheme} > 
+        <ThemeProvider theme={MyTheme} >
           <Provider store={store}>
             <NavigationContainer theme={MyTheme}>
               <Stack.Navigator initialRouteName="Medizen">
@@ -104,13 +105,14 @@ export class App extends Component {
                 <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Details" component={DetailsScreen} navigation={this.props.navigation} />
               </Stack.Navigator>
             </NavigationContainer>
           </Provider>
         </ThemeProvider>
       </SafeAreaView>
     );
-    
+
   }
 }
 
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 50,
     backgroundColor: 'white',
-    height:'100%',
+    height: '100%',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   }
 });

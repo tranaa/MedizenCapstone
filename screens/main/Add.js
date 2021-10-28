@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform } from 'react-native';
-import { Button, Input, CheckBox  } from 'react-native-elements'
+import { Button, Input, CheckBox } from 'react-native-elements'
 import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
