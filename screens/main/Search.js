@@ -16,24 +16,11 @@ function Search(props) {
         if (isEmptyString(query)) {
             setMeds(props.medicines);
         } else {
-            firebase.firestore()
-            .collection('medications')
-            .doc(props.route.params.uid)
-            .collection('userMedications')
-            .get()
-            .then((snapshot) => {
-                let meds = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    return data
-                });
-                let medsFiltered = meds.filter(med => {
-
-                    return med.medName.toString().toLowerCase().includes(search.toLowerCase().trim())
-                })
-                setMeds(medsFiltered);
+            let filteredMeds = props.medicines.filter(med => {
+                return med.medName.toString().toLowerCase().includes(search.toLowerCase().trim())
             })
+            setMeds(filteredMeds)
         }
-        
     }
 
     useEffect(() => {
@@ -52,40 +39,24 @@ function Search(props) {
     }
 
     return (
-        <View>
+        <View style={styles.container}>
             <TextInput
-                placeholder="Type Here..."
+                placeholder="Search Medication"
+                style={styles.input}
                 onChangeText={(search) => {
                         fetchUsers(search)
                         setQuery(search)
                     }
                 }
             />
-
-            {/* <FlatList
+            <FlatList
                 numColumns={1}
                 horizontal={false}
-                data={users}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        onPress={() => props.navigation.navigate("Profile", {uid: item.id})}>
-                        <Text styles={{width:100}} >{item.name}</Text>
-                    </TouchableOpacity>
-
+                data={meds}
+                renderItem={({item}) => (
+                    <MediCard medication={item} />
                 )}
-            /> */}
-            <ScrollView style={styles.container}>
-                <View style={styles.containerGallery}>
-                    <FlatList
-                        numColumns={1}
-                        horizontal={false}
-                        data={meds}
-                        renderItem={({item}) => (
-                            <MediCard medication={item} />
-                        )}
-                    />
-                </View>
-            </ScrollView>
+            />
         </View>
     )
 }
@@ -94,19 +65,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    containerInfo: {
-        margin: 20
-    },
-    containerGallery: {
-        flex: 1
-    },
-    containerImage: {
-        flex: 1
-    },
-    image: {
-        flex: 1,
-        aspectRatio: 1 / 1,
-        height: Dimensions.get('window').width,
+    input: {
+        marginTop: 18,
+        marginHorizontal: 18,
+        fontSize: 18
     },
     loadingContainer: {
         flex: 1,
