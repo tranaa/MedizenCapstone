@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID} from "@env"
-
+//tets
 import { firebase } from '@firebase/app'
 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
