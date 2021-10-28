@@ -13,8 +13,11 @@ function Feed(props) {
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const clickCard = (id) => {
-        console.log("it works: " + id);
+    const { navigate } = props.navigation;
+
+    const clickCard = (name, dose, freq, desc, img) => {
+        console.log("it works: " + name);
+        navigate('Details', { medName: name, dosage: dose, frequency: freq, description: desc, image: img })
     }
     // useEffect(() => {
     //     if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
@@ -50,7 +53,7 @@ function Feed(props) {
                     data={meds}
                     renderItem={({ item }) => (
                         <TouchableOpacity>
-                            <MediCard medication={item} onPress={() => clickCard(item.id)} />
+                            <MediCard medication={item} onPress={() => clickCard(item.medName, item.dosage, item.frequency, item.description, item.image)} />
                         </TouchableOpacity>
                     )}
                 />
