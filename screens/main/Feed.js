@@ -14,9 +14,9 @@ function Feed(props) {
 
     const { navigate } = props.navigation;
 
-    const clickCard = (name, dose, freq, desc, img) => {
-        console.log("it works: " + name);
-        navigate('Details', { medName: name, dosage: dose, frequency: freq, description: desc, image: img })
+    const clickCard = (id, name, dose, freq, desc, img, active) => {
+        console.log("it works: " + active);
+        navigate('Details', { id: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
 
     useEffect(() => {
@@ -45,7 +45,7 @@ function Feed(props) {
                     data={meds}
                     renderItem={({ item }) => (
                         <TouchableOpacity>
-                            <MediCard medication={item} onPress={() => clickCard(item.medName, item.dosage, item.frequency, item.description, item.image)} />
+                            <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
                         </TouchableOpacity>
                     )}
                 />
