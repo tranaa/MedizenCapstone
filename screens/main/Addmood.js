@@ -17,7 +17,6 @@ export default function Add({ navigation }) {
   const [value, setValue] = React.useState("");
   
 
-
   //function to add mood(It is from the onPress button)
   const addMood = () => {
     firebase.firestore()
@@ -30,7 +29,12 @@ export default function Add({ navigation }) {
           creation: firebase.firestore.FieldValue.serverTimestamp()
         }).then((function () {
           fetchUserMoods()
-          navigation.navigate("MoodTracker")
+          // navigation.navigate("MoodTracker")
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Medizen'}]
+          })
+          
         }))
   }
 
@@ -41,7 +45,7 @@ export default function Add({ navigation }) {
   const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4}]
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={{flexGrow:1}}>
       <View style={styles.headingContainer}>
        <Text style={styles.header}>How are you feeling today ?</Text>
       </View>
