@@ -16,6 +16,7 @@ function Profile(props) {
     const [loading, setLoading] = useState(true);
     const { navigate } = props.navigation;
 
+   
     useEffect(() => {
         //notification handling when it is running in the background
         const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(
@@ -28,7 +29,7 @@ function Profile(props) {
         const foregroundSubscription = Notifications.addNotificationReceivedListener(
           (notification) => {
             //We can move to the specific screen
-            console.log(notification);
+            navigate('Addmood')
           }
         );
     
@@ -46,8 +47,7 @@ function Profile(props) {
             data: { mySpecialData: 'Some text' },
           },
           trigger: {
-            seconds:2,
-            
+           seconds: 2        
             
           },
         });

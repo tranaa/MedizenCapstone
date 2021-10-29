@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView, ActivityIndicator, Platform, SafeAreaView } from 'react-native'
-import MediCard from '../../components/MoodCard';
+import MoodCard from '../../components/MoodCard';
 
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetchUserMoods } from '../../redux/actions';
 
-function Feed(props) {
-    const [posts, setPosts] = useState([]);
+function MoodTracker(props) {
     const [moods, setMoods] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        props.fetchUserMoods()
+    }, [])
+
+    useEffect(() => {
+        console.log(props.moods)
         if (props.moods.length !== 0) {
-            setMeds(props.moods);
+            setMoods(props.moods);
             setLoading(false);
         }
     }, [props.moods])
 
-    if(loading && props.moods != 0) {
+    if(loading && props.moods.length != 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#00ff00" />
@@ -32,9 +38,9 @@ function Feed(props) {
                 <FlatList
                     numColumns={1}
                     horizontal={false}
-                    data={meds}
+                    data={moods}
                     renderItem={({item}) => (
-                        <MoodCard moods={item} />
+                        <MoodCard mood={item} />
                     )}
                 />
             </View>
@@ -71,10 +77,10 @@ const styles = StyleSheet.create({
 })
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    following: store.userState.following,
-    feed: store.usersState.feed,
-    usersFollowingLoaded: store.usersState.usersFollowingLoaded,
     medicines: store.userState.medicines,
     moods: store.userState.moods
 })
-export default connect(mapStateToProps, null)(Feed);
+
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(MoodTracker);

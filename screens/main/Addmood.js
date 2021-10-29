@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform,Image } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import { Button, Input, CheckBox  } from 'react-native-elements'
+import { Button, Input, CheckBox, ButtonGroup  } from 'react-native-elements'
 import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
-import { fetchUserMeds } from '../../redux/actions/index'
+import { fetchUserMoods } from '../../redux/actions/index'
 
 
 export default function Add({ navigation }) {
@@ -14,9 +14,8 @@ export default function Add({ navigation }) {
   const [moodComment, setMoodComment] = useState("")
 
   //set the value of mood (1,- 4) where 1 is happy and 4 is bad day 
-  const [value, setValue] = React.useState('first');
+  const [value, setValue] = React.useState("");
   
-
 
 
   //function to add mood(It is from the onPress button)
@@ -27,39 +26,30 @@ export default function Add({ navigation }) {
         .collection("userMood")
         .add({
             value,
-          moodComment,
+            moodComment,
           creation: firebase.firestore.FieldValue.serverTimestamp()
         }).then((function () {
-          fetchUserMeds()
-          navigation.replace("Medizen")
+          fetchUserMoods()
+          navigation.navigate("MoodTracker")
         }))
   }
 
-
+  const mood4 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/veryhappy.png')} />
+  const mood3 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/smiley.png')} />
+  const mood2 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/sad.png')} />
+  const mood1 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/anxiety.png')} />
+  const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4}]
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headingContainer}>
        <Text style={styles.header}>How are you feeling today ?</Text>
       </View>
-      <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
-      <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/veryhappy.png')} />
-        <RadioButton value="1" />
-      </View>
-      <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/smiley.png')} />
-        <RadioButton value="2" />
-      </View>
-      <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/sad.png')} />
-        <RadioButton value="3" />
-      </View>
-      <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/anxiety.png')} />
-        <RadioButton value="4" />
-      </View>
-    </RadioButton.Group>
+      <ButtonGroup
+        onPress={index => setValue(index)}
+        selectedIndex={value}
+        buttons={buttons} />
+
       <View style={styles.textAreaContainer} >
         <TextInput
           style={styles.textArea}
@@ -91,6 +81,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  moodContainer:{
+    flexDirection: 'row'
   },
   fixedRatio: {
     flex: 1,
