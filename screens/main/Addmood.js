@@ -44,19 +44,19 @@ export default function Add({ navigation }) {
       </View>
       <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
       <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('C:/Users/VINAYAK/Desktop/capstone/MedizenCapstone/assets/veryhappy.png')} />
+      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/veryhappy.png')} />
         <RadioButton value="1" />
       </View>
       <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('C:/Users/VINAYAK/Desktop/capstone/MedizenCapstone/assets/smiley.png')} />
+      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/smiley.png')} />
         <RadioButton value="2" />
       </View>
       <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('C:/Users/VINAYAK/Desktop/capstone/MedizenCapstone/assets/sad.png')} />
+      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/sad.png')} />
         <RadioButton value="3" />
       </View>
       <View>
-      <Image style = {{ width: 30, height: 30 }} source={require('C:/Users/VINAYAK/Desktop/capstone/MedizenCapstone/assets/anxiety.png')} />
+      <Image style = {{ width: 30, height: 30 }} source={require('../../assets/anxiety.png')} />
         <RadioButton value="4" />
       </View>
     </RadioButton.Group>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 150,
-    fontSize: '18px',
+    fontSize: 18,
     justifyContent: "flex-start",
     borderBottomWidth: 1,
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
     textAlign: 'left',
-    alignItems: 'left',
+    alignItems: 'flex-start',
   },
   headingContainer: {
     paddingHorizontal: 10,

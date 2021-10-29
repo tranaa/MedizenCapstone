@@ -14,13 +14,14 @@ function Profile(props) {
     const [user, setUser] = useState(null);
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { navigate } = props.navigation;
 
     useEffect(() => {
         //notification handling when it is running in the background
         const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(
           (response) => {
             //We can move to the specific screen
-            console.log(response);
+            navigate('Addmood')
           }
         );
         //notification handling when it is running in the forebackground
