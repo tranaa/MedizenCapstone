@@ -5,9 +5,16 @@ import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { MaterialIcons } from '@expo/vector-icons'
 
 
-const Details = ({ route, navigation }) => {
-    const { id, dosage, medName, frequency, description, active } = route.params;
+const Details = (props) => {
+
+    const { medid, dosage, medName, frequency, description, active } = props.route.params;
     const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
+    const { navigate } = props.navigation;
+
+    const clickEdit = (id, name, dose, freq, desc, img, active) => {
+        console.log("edit works: " + id);
+        navigate('EditMed', { mid: id, mmedName: name, mdosage: dose, mfrequency: freq, mdescription: desc, image: img, mactive: active })
+    }
 
     function getActive(isActive) {
         return (isActive ? 'Yes' : 'No');
@@ -71,7 +78,7 @@ const Details = ({ route, navigation }) => {
             <View style={styles.topContainer}>
 
                 <View style={styles.iconStyle}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => clickEdit(medid, medName, dosage, frequency, description, image, active)}>
                         <MaterialIcons name={'edit'} size={40} color="#666" />
                         <Text style={styles.editText}>Edit</Text>
                     </TouchableOpacity>
