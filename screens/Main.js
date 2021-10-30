@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import firebase from 'firebase'
-import * as Notifications from 'expo-notifications';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds, fetchUserMoods } from '../redux/actions/index'
+import { fetchUser, clearData, fetchUserMeds, fetchUserMoods } from '../redux/actions/index'
 import { ThemeProvider } from 'react-native-elements';
 import { MyTheme } from '../styles';
 import MoodTracker from './main/MoodTracker'
@@ -26,8 +25,6 @@ export class Main extends Component {
     componentDidMount() {
         this.props.clearData();
         this.props.fetchUser();
-        this.props.fetchUserPosts();
-        this.props.fetchUserFollowing();
         this.props.fetchUserMeds();
         this.props.fetchUserMoods();
         async function registerForPushNotification() {
@@ -94,10 +91,9 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
-    following: store.userState.following,
     medicines: store.userState.medicines,
-    moods: store.userState.moods,
+    moods: store.userState.moods
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, fetchUser, clearData, fetchUserMeds }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

@@ -16,7 +16,7 @@ export function fetchUserMoods() {
             .collection("moods")
             .doc(firebase.auth().currentUser.uid)
             .collection("userMood")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 let moods = snapshot.docs.map(doc => {
@@ -118,7 +118,7 @@ export function fetchUsersFollowingPosts(uid) {
             .collection("posts")
             .doc(uid)
             .collection("userPosts")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 const uid = snapshot.query._.C_.path.segments[1]
@@ -166,7 +166,7 @@ export function fetchUserMeds() {
             .collection("medications")
             .doc(firebase.auth().currentUser.uid)
             .collection("userMedications")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 let medicines = snapshot.docs.map(doc => {

@@ -19,13 +19,13 @@ const MoodCard = (props) => {
   const moodToImage = () => {
     switch(value){
       case 0:
-        return veryHappy
-      case 1:
-        return smiley
-      case 2:
-        return sad
-      case 3:
         return anxiety
+      case 1:
+        return sad
+      case 2:
+        return smiley
+      case 3:
+        return veryHappy
       default: 
         return {uri:"https://i.imgur.com/g3D5jNz.jpg"}
     }
@@ -33,7 +33,6 @@ const MoodCard = (props) => {
   const image = moodToImage()
   const fullDate = creation.toDate().toString()
   const dateArray = fullDate.split(" ")
-  console.log(dateArray)
   const date = `${dateArray[0]} ${dateArray[1]} ${dateArray[2]} ${dateArray[3]}`
   return (
     <Card class="mood-card" elevation={7}>

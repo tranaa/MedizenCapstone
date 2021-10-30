@@ -110,7 +110,7 @@ export class App extends Component {
                 <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
                 <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
-                <Stack.Screen name="Addmood" component={AddMood} navigation={this.props.navigation}/>
+                <Stack.Screen name="AddMood" component={AddMood} navigation={this.props.navigation}/>
                 <Stack.Screen name="MoodTracker" component={MoodTracker} navigation={this.props.navigation}/>
                 
               </Stack.Navigator>

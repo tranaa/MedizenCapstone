@@ -13,11 +13,10 @@ function MoodTracker(props) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        props.fetchUserMoods()
+        props.fetchUserMoods();
     }, [])
 
     useEffect(() => {
-        console.log(props.moods)
         if (props.moods.length !== 0) {
             setMoods(props.moods);
             setLoading(false);
@@ -30,10 +29,10 @@ function MoodTracker(props) {
                 <ActivityIndicator size="large" color="#00ff00" />
             </SafeAreaView>
         )
-    } 
+    }
 
     return (
-        <ScrollView style={styles.container}>
+        // <ScrollView style={styles.container}>
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
@@ -42,9 +41,12 @@ function MoodTracker(props) {
                     renderItem={({item}) => (
                         <MoodCard mood={item} />
                     )}
+                    LisHeaderComponent={<></>}
+                    ListFooterComponent={<></>}
+                    style={{flex: 1}}
                 />
             </View>
-        </ScrollView>
+        // </ScrollView>
 
     )
 }
@@ -78,7 +80,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     medicines: store.userState.medicines,
-    moods: store.userState.moods
+    moods: store.userState.moods,
+    test: store.userState
 })
 
 const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);

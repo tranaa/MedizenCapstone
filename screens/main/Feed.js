@@ -27,8 +27,8 @@ function Feed(props) {
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.containerGallery}>
+        // <ScrollView style={styles.container}>
+        //     <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
@@ -36,9 +36,12 @@ function Feed(props) {
                     renderItem={({item}) => (
                         <MediCard medication={item} />
                     )}
+                    LisHeaderComponent={<></>}
+                    ListFooterComponent={<></>}
+                    style={{flex: 1}}
                 />
-            </View>
-        </ScrollView>
+        //     </View>
+        // </ScrollView>
     )
 }
 
