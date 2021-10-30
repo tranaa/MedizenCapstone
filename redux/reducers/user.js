@@ -1,10 +1,11 @@
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, CLEAR_DATA } from "../constants"
+import { USER_MOODS_STATE_CHANGE, USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, CLEAR_DATA } from "../constants"
 
 const initialState = {
     currentUser: null,
     posts: [],
     following: [],
     medicines: [],
+    moods: []
 }
 
 export const user = (state = initialState, action) => {
@@ -19,7 +20,6 @@ export const user = (state = initialState, action) => {
                 ...state,
                 posts: action.posts
             }
-
         case USER_FOLLOWING_STATE_CHANGE:
             return {
                 ...state,
@@ -29,6 +29,11 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 medicines: action.medicines
+            }
+        case USER_MOODS_STATE_CHANGE:
+            return {
+                ...state,
+                moods: action.moods
             }
         case CLEAR_DATA:
             return initialState

@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView, ActivityIndicator, Platform, SafeAreaView } from 'react-native'
-import MediCard from '../../components/MedCard';
+import MoodCard from '../../components/MoodCard';
 
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { fetchUserMoods } from '../../redux/actions';
 
-function Feed(props) {
-    const [meds, setMeds] = useState([]);
+function MoodTracker(props) {
+    const [moods, setMoods] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (props.medicines.length !== 0) {
-            let medsFiltered = props.medicines.filter(med => med.active)
-            setMeds(medsFiltered);
+        props.fetchUserMoods();
+    }, [])
+
+    useEffect(() => {
+        if (props.moods.length !== 0) {
+            setMoods(props.moods);
             setLoading(false);
         }
-    }, [props.medicines])
+    }, [props.moods])
 
-    if(loading && props.medicines != 0) {
+    if(loading && props.moods.length != 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#00ff00" />
@@ -28,27 +33,27 @@ function Feed(props) {
 
     return (
         // <ScrollView style={styles.container}>
-        //     <View style={styles.containerGallery}>
+            <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
-                    data={meds}
+                    data={moods}
                     renderItem={({item}) => (
-                        <MediCard medication={item} />
+                        <MoodCard mood={item} />
                     )}
                     LisHeaderComponent={<></>}
                     ListFooterComponent={<></>}
                     style={{flex: 1}}
                 />
-        //     </View>
+            </View>
         // </ScrollView>
+
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 50
     },
     containerInfo: {
         margin: 20
@@ -72,9 +77,13 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
     }
 })
-
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    medicines: store.userState.medicines
+    medicines: store.userState.medicines,
+    moods: store.userState.moods,
+    test: store.userState
 })
-export default connect(mapStateToProps, null)(Feed);
+
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(MoodTracker);

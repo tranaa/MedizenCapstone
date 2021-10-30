@@ -4,10 +4,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds } from '../redux/actions/index'
+import { fetchUser, clearData, fetchUserMeds, fetchUserMoods } from '../redux/actions/index'
 import { ThemeProvider } from 'react-native-elements';
 import { MyTheme } from '../styles';
-
+import MoodTracker from './main/MoodTracker'
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import AddScreen from './main/Add'
@@ -20,12 +20,17 @@ const EmptyScreen = () => {
 }
 
 export class Main extends Component {
+
+
     componentDidMount() {
         this.props.clearData();
         this.props.fetchUser();
-        this.props.fetchUserPosts();
-        this.props.fetchUserFollowing();
         this.props.fetchUserMeds();
+        this.props.fetchUserMoods();
+        async function registerForPushNotification() {
+            const {status} = await Permissions.getAsync(Permissions.Notifications);
+     
+          }
     }
     
     render() {
@@ -60,6 +65,12 @@ export class Main extends Component {
                                 <MaterialCommunityIcons name="plus-box" color={color} size={26} />
                             ),
                         }} />
+                         <Tab.Screen name="MoodTracker" component={MoodTracker}
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons name="book-open" color={color} size={26} />
+                            ),
+                        }} />
                     <Tab.Screen name="Profile" component={ProfileScreen} 
                         listeners={({ navigation }) => ({
                             tabPress: event => {
@@ -80,9 +91,9 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
-    following: store.userState.following,
-    medicines: store.userState.medicines
+    medicines: store.userState.medicines,
+    moods: store.userState.moods
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, fetchUserFollowing, clearData, fetchUserMeds }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, fetchUser, clearData, fetchUserMeds }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);
