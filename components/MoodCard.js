@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View, StyleSheet, Dimensions, Text, Image, TouchableOpacity} from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import veryHappy from '../assets/veryhappy.png'
-import smiley from '../assets/smiley.png'
-import sad from '../assets/sad.png'
-import anxiety from '../assets/anxiety.png'
+import lvl5 from '../assets/lvl5.png'
+import lvl4 from '../assets/lvl4.png'
+import lvl3 from '../assets/lvl3.png'
+import lvl2 from '../assets/lvl2.png'
+import lvl1 from '../assets/lvl1.png'
 
 
 const MoodCard = (props) => {
@@ -19,13 +20,15 @@ const MoodCard = (props) => {
   const moodToImage = () => {
     switch(value){
       case 0:
-        return anxiety
+        return lvl1
       case 1:
-        return sad
+        return lvl2
       case 2:
-        return smiley
+        return lvl3
       case 3:
-        return veryHappy
+        return lvl4
+      case 4:
+        return lvl5
       default: 
         return {uri:"https://i.imgur.com/g3D5jNz.jpg"}
     }
