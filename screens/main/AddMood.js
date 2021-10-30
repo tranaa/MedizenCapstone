@@ -37,12 +37,12 @@ export default function Add({ navigation }) {
           
         }))
   }
-
-  const mood4 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/veryhappy.png')} />
-  const mood3 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/smiley.png')} />
-  const mood2 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/sad.png')} />
-  const mood1 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/anxiety.png')} />
-  const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4}]
+  const mood5 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl5.png')} />
+  const mood4 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl4.png')} />
+  const mood3 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl3.png')} />
+  const mood2 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl2.png')} />
+  const mood1 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl1.png')} />
+  const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4},, { element: mood5}]
 
   return (
     <ScrollView contentContainerStyle={{flexGrow:1}}>
@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   moodContainer:{
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingTop: 50,
   },
   fixedRatio: {
     flex: 1,
