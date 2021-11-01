@@ -18,7 +18,22 @@ export default function EditMed({ navigation, route }) {
   const [dosageError, setDosageError] = useState("")
   const [freqError, setFreqError] = useState("")
 
-  const { mid, mdosage, mmedName, mfrequency, mdescription, mactive } = route.params;
+  const { mid } = route.params;
+  useEffect(() => {
+    // if (props.medicines.length !== 0) {
+    const { mid, mdosage, mmedName, mfrequency, mdescription, mactive } = route.params;
+    // let medsFiltered = props.medicines.filter(med => med.active)
+    // setMeds(medsFiltered);
+    // setLoading(false);
+    // }
+    setMedName(mmedName)
+    setDosage(mdosage)
+    setFrequency(mfrequency)
+    setDescription(mdescription)
+    setActive(mactive)
+
+  }, [route])
+
 
   const editMedication = () => {
 
@@ -40,11 +55,18 @@ export default function EditMed({ navigation, route }) {
           creation: firebase.firestore.FieldValue.serverTimestamp()
 
         }).then((function () {
+
           fetchUserMeds()
+
           setNameError("")
           setDosageError("")
           setFreqError("")
-          navigation.replace("Medizen")
+          // navigation.replace("Medizen")
+
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Medizen' }]
+          })
         }))
     }
   }
@@ -74,23 +96,23 @@ export default function EditMed({ navigation, route }) {
         </View>
         <Input
           style={styles.input}
-          placeholder={mmedName}
-          defaultValue={mmedName}
+          placeholder={medName}
+          // defaultValue={mmedName}
           onChangeText={medName => setMedName(medName)}
           errorMessage={nameError}
         />
         <Input
           style={styles.input}
-          placeholder={mdosage}
-          defaultValue={mdosage}
+          placeholder={dosage}
+          // defaultValue={mdosage}
           onChangeText={dosage => setDosage(dosage)}
           errorMessage={dosageError}
         />
         <Input
           style={styles.input}
           // placeholder="How often is it taken?"
-          defaultValue={mfrequency}
-          placeholder={mfrequency}
+          // defaultValue={mfrequency}
+          placeholder={frequency}
           onChangeText={frequency => setFrequency(frequency)}
           errorMessage={freqError}
         />
@@ -99,8 +121,8 @@ export default function EditMed({ navigation, route }) {
             style={styles.textArea}
             underlineColorAndroid="transparent"
             // placeholder="What is it treating?"
-            defaultValue={mdescription}
-            placeholder={mdescription}
+            // defaultValue={mdescription}
+            placeholder={description}
             multiline={true}
             numberOfLines={2}
             onChangeText={description => setDescription(description)}
@@ -112,7 +134,7 @@ export default function EditMed({ navigation, route }) {
             title='Active Medication?'
             checkedIcon='dot-circle-o'
             uncheckedIcon='circle-o'
-            checked={mactive}
+            checked={active}
             onPress={() => setActive(!active)}
           />
         </View>
