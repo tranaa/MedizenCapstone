@@ -8,10 +8,12 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { ThemeProvider } from 'react-native-elements';
 
-
+import * as Notifications from 'expo-notifications';
 import RegisterScreen from './screens/auth/Register'
 import LoginScreen from './screens/auth/Login'
 import MainScreen from './screens/Main'
+ import AddMood from './screens/main/AddMood'
+ import MoodTracker from './screens/main/MoodTracker'
 import AddScreen from './screens/main/Add'
 import SaveScreen from './screens/main/Save'
 import SearchScreen from './screens/main/Search'
@@ -46,11 +48,13 @@ if (firebase.apps.length === 0) {
 const Stack = createStackNavigator()
 
 export class App extends Component {
-  constructor(props) {
+
+  constructor(props){
     super(props);
     this.state = {
       load: false
     }
+    
   }
 
   componentDidMount() {
@@ -64,6 +68,7 @@ export class App extends Component {
         this.setState({
           loggedIn: true,
           loaded: true
+          
         })
       }
     })
@@ -102,11 +107,12 @@ export class App extends Component {
           <Provider store={store}>
             <NavigationContainer theme={MyTheme}>
               <Stack.Navigator initialRouteName="Medizen">
-                <Stack.Screen name="Medizen" component={MainScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Details" component={DetailsScreen} navigation={this.props.navigation} />
+                <Stack.Screen name="Medizen" component={MainScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation}/>
+                <Stack.Screen name="AddMood" component={AddMood} navigation={this.props.navigation}/>
+                <Stack.Screen name="MoodTracker" component={MoodTracker} navigation={this.props.navigation}/>
                 <Stack.Screen name="EditMed" component={EditMedScreen} navigation={this.props.navigation} />
               </Stack.Navigator>
             </NavigationContainer>

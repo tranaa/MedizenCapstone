@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   textArea: {
-    height: 150,
     fontSize: 18,
     justifyContent: "flex-start",
     borderBottomWidth: 1,

@@ -1,4 +1,4 @@
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
+import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USER_MOODS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
 import firebase from 'firebase'
 import { SnapshotViewIOSComponent } from 'react-native'
 require('firebase/firestore')
@@ -9,6 +9,28 @@ export function clearData() {
         dispatch({type: CLEAR_DATA})
     })
 }
+
+export function fetchUserMoods() {
+    return ((dispatch) => {
+        firebase.firestore()
+            .collection("moods")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userMood")
+            .orderBy("creation", "desc")
+            .get()
+            .then((snapshot) => {
+                let moods = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return { 
+                        id, ...data 
+                    }
+                })
+                dispatch({ type: USER_MOODS_STATE_CHANGE, moods })
+            })
+    })
+}
+
 export function fetchUser() {
     return ((dispatch) => {
         firebase.firestore()
@@ -96,12 +118,11 @@ export function fetchUsersFollowingPosts(uid) {
             .collection("posts")
             .doc(uid)
             .collection("userPosts")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 const uid = snapshot.query._.C_.path.segments[1]
                 const user = getState().usersState.users.find(el => el.uid === uid);
-
 
                 let posts = snapshot.docs.map(doc => {
                     const data = doc.data();
@@ -145,7 +166,7 @@ export function fetchUserMeds() {
             .collection("medications")
             .doc(firebase.auth().currentUser.uid)
             .collection("userMedications")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 let medicines = snapshot.docs.map(doc => {
