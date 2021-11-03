@@ -97,21 +97,21 @@ export default function EditMed({ navigation, route }) {
         <Input
           style={styles.input}
           placeholder={medName}
-          // defaultValue={mmedName}
+          defaultValue={medName}
           onChangeText={medName => setMedName(medName)}
           errorMessage={nameError}
         />
         <Input
           style={styles.input}
           placeholder={dosage}
-          // defaultValue={mdosage}
+          defaultValue={dosage}
           onChangeText={dosage => setDosage(dosage)}
           errorMessage={dosageError}
         />
         <Input
           style={styles.input}
           // placeholder="How often is it taken?"
-          // defaultValue={mfrequency}
+          defaultValue={frequency}
           placeholder={frequency}
           onChangeText={frequency => setFrequency(frequency)}
           errorMessage={freqError}
@@ -121,7 +121,7 @@ export default function EditMed({ navigation, route }) {
             style={styles.textArea}
             underlineColorAndroid="transparent"
             // placeholder="What is it treating?"
-            // defaultValue={mdescription}
+            defaultValue={description}
             placeholder={description}
             multiline={true}
             numberOfLines={2}
