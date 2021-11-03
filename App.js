@@ -114,6 +114,7 @@ export class App extends Component {
                 <Stack.Screen name="AddMood" component={AddMood} navigation={this.props.navigation}/>
                 <Stack.Screen name="MoodTracker" component={MoodTracker} navigation={this.props.navigation}/>
                 <Stack.Screen name="EditMed" component={EditMedScreen} navigation={this.props.navigation} />
+                <Stack.Screen name="Details" component={DetailsScreen} navigation={this.props.navigation} />
               </Stack.Navigator>
             </NavigationContainer>
           </Provider>

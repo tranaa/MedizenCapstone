@@ -12,6 +12,12 @@ function Search(props) {
     const [loading, setLoading] = useState(true);
     const [query, setQuery] = useState("")
 
+    const { navigate } = props.navigation;
+    
+    const clickCard = (id, name, dose, freq, desc, img, active) => {
+        navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
+    }
+
     const fetchUsers = (search) => {
         if (isEmptyString(query)) {
             setMeds(props.medicines);
@@ -54,7 +60,9 @@ function Search(props) {
                 horizontal={false}
                 data={meds}
                 renderItem={({item}) => (
-                    <MediCard medication={item} />
+                    <TouchableOpacity>
+                        <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
+                    </TouchableOpacity>
                 )}
             />
         </View>

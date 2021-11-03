@@ -15,7 +15,6 @@ function Feed(props) {
     const { navigate } = props.navigation;
 
     const clickCard = (id, name, dose, freq, desc, img, active) => {
-        console.log("it works: " + active);
         navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
 

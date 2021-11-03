@@ -31,7 +31,6 @@ export default function EditMed({ navigation, route }) {
     setFrequency(mfrequency)
     setDescription(mdescription)
     setActive(mactive)
-
   }, [route])
 
 
@@ -96,23 +95,22 @@ export default function EditMed({ navigation, route }) {
         </View>
         <Input
           style={styles.input}
-          placeholder={medName}
+          placeholder="Name"
           defaultValue={medName}
           onChangeText={medName => setMedName(medName)}
           errorMessage={nameError}
         />
         <Input
           style={styles.input}
-          placeholder={dosage}
+          placeholder="Dosage"
           defaultValue={dosage}
           onChangeText={dosage => setDosage(dosage)}
           errorMessage={dosageError}
         />
         <Input
           style={styles.input}
-          // placeholder="How often is it taken?"
+          placeholder="How often is it taken?"
           defaultValue={frequency}
-          placeholder={frequency}
           onChangeText={frequency => setFrequency(frequency)}
           errorMessage={freqError}
         />
@@ -120,9 +118,8 @@ export default function EditMed({ navigation, route }) {
           <TextInput
             style={styles.textArea}
             underlineColorAndroid="transparent"
-            // placeholder="What is it treating?"
+            placeholder="What is it treating?"
             defaultValue={description}
-            placeholder={description}
             multiline={true}
             numberOfLines={2}
             onChangeText={description => setDescription(description)}

@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
         paddingBottom: 30,
         borderBottomColor: '#ccc',
         borderBottomWidth: 2,
-        borderBottomStyle: "dashed",
     },
     detailsContainer: {
         display: 'flex',
