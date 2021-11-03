@@ -8,42 +8,72 @@ import { fetchUserMeds } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 
 
-export default function Add({ navigation }) {
+export default function EditMed({ navigation, route }) {
   const [medName, setMedName] = useState("");
   const [dosage, setDosage] = useState("");
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("")
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState("")
   const [nameError, setNameError] = useState("")
   const [dosageError, setDosageError] = useState("")
   const [freqError, setFreqError] = useState("")
-  
-  const addMedication = () => {
-    if(validateForm()) {
+
+  const { mid } = route.params;
+  useEffect(() => {
+    // if (props.medicines.length !== 0) {
+    const { mid, mdosage, mmedName, mfrequency, mdescription, mactive } = route.params;
+    // let medsFiltered = props.medicines.filter(med => med.active)
+    // setMeds(medsFiltered);
+    // setLoading(false);
+    // }
+    setMedName(mmedName)
+    setDosage(mdosage)
+    setFrequency(mfrequency)
+    setDescription(mdescription)
+    setActive(mactive)
+
+  }, [route])
+
+
+  const editMedication = () => {
+
+    if (validateForm()) {
+
       firebase.firestore()
         .collection('medications')
-        .doc(firebase.auth().currentUser.uid)
+        .doc(firebase.auth()
+          .currentUser.uid)
         .collection("userMedications")
-        .add({
-          medName,
-          dosage,
-          frequency,
-          description,
-          active,
+        .doc(mid)
+        .update({
+
+          medName: medName,
+          dosage: dosage,
+          frequency: frequency,
+          description: description,
+          active: active,
           creation: firebase.firestore.FieldValue.serverTimestamp()
+
         }).then((function () {
+
           fetchUserMeds()
+
           setNameError("")
           setDosageError("")
           setFreqError("")
-          navigation.replace("Medizen")
+          // navigation.replace("Medizen")
+
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Medizen' }]
+          })
         }))
     }
   }
 
   const validateForm = () => {
     var isValid = true;
-    if (isEmptyString(medName)){
+    if (isEmptyString(medName)) {
       setNameError("Please input medicine name")
       isValid = false
     }
@@ -59,26 +89,30 @@ export default function Add({ navigation }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow:1}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
-        <Text style={styles.header}>Medication</Text>
+          <Text style={styles.header}>Edit Medication</Text>
         </View>
         <Input
           style={styles.input}
-          placeholder="Name"
+          placeholder={medName}
+          defaultValue={medName}
           onChangeText={medName => setMedName(medName)}
           errorMessage={nameError}
         />
         <Input
           style={styles.input}
+          placeholder={dosage}
+          defaultValue={dosage}
           onChangeText={dosage => setDosage(dosage)}
-          placeholder="Dosage"
           errorMessage={dosageError}
         />
         <Input
           style={styles.input}
-          placeholder="How often is it taken?"
+          // placeholder="How often is it taken?"
+          defaultValue={frequency}
+          placeholder={frequency}
           onChangeText={frequency => setFrequency(frequency)}
           errorMessage={freqError}
         />
@@ -86,30 +120,32 @@ export default function Add({ navigation }) {
           <TextInput
             style={styles.textArea}
             underlineColorAndroid="transparent"
-            placeholder="What is it treating?"
+            // placeholder="What is it treating?"
+            defaultValue={description}
+            placeholder={description}
             multiline={true}
             numberOfLines={2}
             onChangeText={description => setDescription(description)}
           />
         </View>
         <View>
-        <CheckBox 
-          style={styles.checkbox}
-          title='Active Medication?'
-          checkedIcon='dot-circle-o'
-          uncheckedIcon='circle-o'
-          checked={active}
-          onPress={() => setActive(!active)}
-        />
+          <CheckBox
+            style={styles.checkbox}
+            title='Active Medication?'
+            checkedIcon='dot-circle-o'
+            uncheckedIcon='circle-o'
+            checked={active}
+            onPress={() => setActive(!active)}
+          />
         </View>
-        
+
         <Button
-          onPress={() => addMedication()}
-          title="Add Medication"
+          onPress={() => editMedication()}
+          title="Edit Medication"
         />
       </View>
     </ScrollView>
-    
+
   );
 }
 
@@ -134,9 +170,12 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   input: {
+    height: 20,
+    width: 100,
     marginBottom: 8
   },
   textArea: {
+    height: 150,
     fontSize: 18,
     justifyContent: "flex-start",
     borderBottomWidth: 1,
