@@ -25,7 +25,7 @@ const MedCard = (props) => {
               {medName}
             </Text>
             <Text style={styles.paragraph}>
-              {description.substring(0, 50) + '...'}
+              {description.length >= 50 ? `${description.substring(0, 50)}...` : `${description}`}
             </Text>
             <Text style={styles.paragraph}>
               {frequency} x {dosage}
