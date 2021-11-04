@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Dimensions, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -22,21 +22,15 @@ const Details = (props) => {
 
     return (
         <View>
-
             <View style={styles.topContainer}>
-
                 <View style={styles.imageContainer}>
                     <View style={styles.imgBox}>
                         <Image source={{ uri: image }} style={styles.image} />
                     </View>
                 </View>
-
             </View>
-
             <View style={styles.detailsContainer}>
-
                 {/* <View style={styles.gapContainer}></View> */}
-
                 <View style={styles.headerContainer}>
                     <Text style={styles.header}>
                         Name:
@@ -69,9 +63,11 @@ const Details = (props) => {
                     <Text style={styles.paragraph}>
                         {getActive(active)}
                     </Text>
-                    <Text style={styles.paragraph}>
-                        {description}
-                    </Text>
+                    <ScrollView style={styles.description}>
+                        <Text style={styles.paragraph}>
+                            {description}
+                        </Text>
+                    </ScrollView>
                 </View>
             </View>
 
@@ -169,4 +165,7 @@ const styles = StyleSheet.create({
         color: '#34495e',
         alignSelf: 'center'
     },
+    description: {
+        height: Dimensions.get('window').width / 10
+    }
 });

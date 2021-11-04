@@ -84,6 +84,5 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    width: Dimensions.get('window').width,
   }
 });

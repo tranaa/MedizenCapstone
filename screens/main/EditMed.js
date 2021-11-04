@@ -45,11 +45,10 @@ export default function EditMed({ navigation, route }) {
         .collection("userMedications")
         .doc(mid)
         .update({
-
-          medName: medName,
-          dosage: dosage,
-          frequency: frequency,
-          description: description,
+          medName: medName.trim(),
+          dosage: dosage.trim(),
+          frequency: frequency.trim(),
+          description: description.trim(),
           active: active,
           creation: firebase.firestore.FieldValue.serverTimestamp()
 

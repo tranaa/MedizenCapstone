@@ -42,7 +42,7 @@ export default function Add({ navigation }) {
   const mood3 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl3.png')} />
   const mood2 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl2.png')} />
   const mood1 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl1.png')} />
-  const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4},, { element: mood5}]
+  const buttons = [{ element: mood1 }, { element: mood2 }, { element: mood3 }, { element: mood4}, { element: mood5}]
 
   return (
     <ScrollView contentContainerStyle={{flexGrow:1}}>
@@ -66,8 +66,6 @@ export default function Add({ navigation }) {
       </View>
       <View>
       </View>
-      
-      
       <Button
         onPress={() => addMood()}
         title="Add Mood"

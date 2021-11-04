@@ -81,7 +81,6 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     medicines: store.userState.medicines,
     moods: store.userState.moods,
-    test: store.userState
 })
 
 const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);

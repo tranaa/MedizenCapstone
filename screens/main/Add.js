@@ -25,10 +25,10 @@ export default function Add({ navigation }) {
         .doc(firebase.auth().currentUser.uid)
         .collection("userMedications")
         .add({
-          medName,
-          dosage,
-          frequency,
-          description,
+          medName: medName.trim(),
+          dosage: dosage.trim(),
+          frequency: frequency.trim(),
+          description: description.trim(),
           active,
           creation: firebase.firestore.FieldValue.serverTimestamp()
         }).then((function () {

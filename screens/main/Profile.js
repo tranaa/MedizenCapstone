@@ -5,16 +5,28 @@ import MediCard from '../../components/MedCard';
 import { Button  } from 'react-native-elements'
 import * as Notifications from 'expo-notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
 import firebase from 'firebase'
 require('firebase/firestore')
+import { bindActionCreators } from 'redux'
+import { fetchUserMoods, clearData } from '../../redux/actions';
 import { connect } from 'react-redux'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+  } from "react-native-chart-kit";
 function Profile(props) {
     const [user, setUser] = useState(null);
     const [meds, setMeds] = useState([]);
+    const [medCount, setMedCount] = useState(0);
+    const [activeCount, setActiveCount] = useState(0);
+    const [inactiveCount, setInactiveCount] = useState(0);
+    const [moods, setMoods] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [lineChartData, setLineChartData] = useState(null);
     const { navigate } = props.navigation;
 
    
@@ -40,6 +52,8 @@ function Profile(props) {
           foregroundSubscription.remove();
         };
       }, []);
+      
+
       const triggerNotificationHandler = () => {
         Notifications.scheduleNotificationAsync({
           content: {
@@ -75,14 +89,62 @@ function Profile(props) {
     }, [props.route.params.uid])
 
     useEffect(() => {
+        
         if (props.medicines.length !== 0) {
             let medsFiltered = props.medicines.filter(med => med.active)
+            setActiveCount(medsFiltered.length)
+            setMedCount(props.medicines.length)
+            setInactiveCount(props.medicines.length - medsFiltered.length)
             setMeds(medsFiltered);
-            setLoading(false);
         }
+        setLoading(false);
     }, [props.medicines])
 
+    useEffect(() => {
+        if(props.route.params.moods.length != 0 && props.route.params.moods.length != null) {
+            if(props.route.params.moods.length < 7) {
+                let dates = props.route.params.moods.map(mood => {
+                    const fullDate = mood.creation.toDate().toString()
+                    const dateArray = fullDate.split(" ")
+                    const date = `${dateArray[1]} ${dateArray[2]}`
+                    return date
+                })
+                let values = props.route.params.moods.map(mood => mood.value)
+                setLineChartData({
+                    labels: [...dates.reverse()],
+                    data: [...values.reverse()],
+                })
+            }
+            else if(props.route.params.moods.length >= 7) {
+                let lastWeek = props.route.params.moods.slice(0, 7)
+                let dates = lastWeek.map(mood => {
+                    const fullDate = mood.creation.toDate().toString()
+                    const dateArray = fullDate.split(" ")
+                    const date = `${dateArray[1]} ${dateArray[2]}`
+                    return date
+                })
+                let values = lastWeek.map(mood => mood.value)
+                setLineChartData ({
+                    labels: [...dates.reverse()],
+                    data: [...values.reverse()],
+                })
+            }
+        }
+    }, [props.route.params.moods])
+
+    useEffect(() => {
+        props.fetchUserMoods();
+    }, [])
+
+    useEffect(() => {
+        if (props.route.params.moods.length !== 0) {
+            setMoods(props.route.params.moods);
+            setLoading(false);
+        }
+    }, [props.route.params.moods])
+
     const onLogout = () => {
+        props.clearData();
         firebase.auth().signOut();
     }
 
@@ -97,7 +159,7 @@ function Profile(props) {
             </SafeAreaView>
         )
     }
-
+    console.log(props.route.params.moods.length)
     return (
         <View style={styles.container}>
             <View style={styles.containerInfo}>
@@ -133,28 +195,113 @@ function Profile(props) {
                 </View>
                 
             </View>
-            
-            {/* <ScrollView style={styles.containerGallery}>
-                <View style={styles.containerGallery}> */}
-                    <FlatList
-                        numColumns={1}
-                        horizontal={false}
-                        data={meds}
-                        renderItem={({item}) => (
-                            <MediCard medication={item} />
-                        )}
-                        LisHeaderComponent={<></>}
-                        ListFooterComponent={<></>}
-                        style={{flex: 1}}
+            <ScrollView style={styles.statContainer}>
+                <View style={styles.medCountContainer}>
+                    <View>
+                        <Text style={styles.medCount}>{activeCount}</Text>
+                        <Text style={styles.medCountHeader}>Active</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.medCount}>{inactiveCount}</Text>
+                        <Text style={styles.medCountHeader}>Inactive</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.medCount}>{medCount}</Text>
+                        <Text style={styles.medCountHeader}>Total</Text>
+                    </View>
+                </View>
+                <View style={{marginHorizontal: 8}}>
+                    <PieChart
+                        data={[
+                            { name: 'Active', medication: activeCount, color: 'rgba(146, 192, 94, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+                            { name: 'Inactive', medication: inactiveCount, color: 'rgba(146, 192, 94, 0.5)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+                        ]}
+                        width={Dimensions.get('window').width}
+                        height={220}
+                        chartConfig={{
+                            backgroundGradientFrom: "#1E2923",
+                            backgroundGradientFromOpacity: 0,
+                            backgroundGradientTo: "#08130D",
+                            backgroundGradientToOpacity: 0.5,
+                            color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+                            strokeWidth: 2, // optional, default 3
+                            barPercentage: 0.5,
+                            useShadowColorFromDataset: false // optional
+                        }}
+                        accessor={"medication"}
+                        backgroundColor={"transparent"}
+                        absolute
                     />
-                {/* </View>
-            </ScrollView> */}
+                </View>
+                <View style={styles.medCountContainer}>
+                    <View>
+                        <Text style={styles.medCount}>{props.route.params.moods.length}</Text>
+                        <Text style={styles.medCountHeader}>Mood Journal</Text>
+                    </View>
+                </View>
+                <View>
+                {props.route.params.moods.length != 0 && 
+                <><LineChart
+                    data={{
+                    labels: lineChartData.labels,
+                    datasets: [{
+                        data: lineChartData.data
+                    }]
+                    }}
+                    width={Dimensions.get('window').width} // from react-native
+                    height={220}
+                    chartConfig={{
+                        backgroundColor: 'white',
+                        backgroundGradientFrom: 'rgba(146, 192, 94, 1)',
+                        backgroundGradientTo: 'rgba(146, 192, 94, 1)',
+                        fillShadowGradient: 'black',
+                        decimalPlaces: 0,
+                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        style: {
+                            borderRadius: 16
+                        },
+                        propsForDots: {
+                            r: "6",
+                            strokeWidth: "2",
+                            stroke: "orange"
+                        }
+                    }}
+                    bezier
+                    style={{
+                        marginVertical: 4,
+                    }}
+                />
+                <Text style={styles.medCount}>1 Week</Text>
+                </>}
+                </View>
+            </ScrollView>
         </View>
     )
 }
 
 
 const styles = StyleSheet.create({
+    statContainer: {
+        backgroundColor: 'white',
+        textAlign: 'center',
+    },
+    medCountContainer: {
+        display:'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingVertical: 12,
+        borderStyle: 'solid',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: "grey",
+    },
+    medCountHeader: {
+        textAlign: 'center',   
+    },
+    medCount: {
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
     container: {
         flex: 1,
     },
@@ -166,7 +313,8 @@ const styles = StyleSheet.create({
     containerNameContext: {
     },
     containerInfo: {
-        marginHorizontal: 16
+        paddingHorizontal: 16,
+        backgroundColor: 'white'
     },
     containerGallery: {
         flex: 1,
@@ -199,7 +347,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    medicines: store.userState.medicines
+    medicines: store.userState.medicines,
 })
 
-export default connect(mapStateToProps, null)(Profile)
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, clearData }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(Profile);

@@ -25,7 +25,7 @@ const MedCard = (props) => {
               {medName}
             </Text>
             <Text style={styles.paragraph}>
-              {description}
+              {description.substring(0, 50) + '...'}
             </Text>
             <Text style={styles.paragraph}>
               {frequency} x {dosage}
@@ -53,18 +53,20 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontWeight: 'bold',
     color: '#34495e',
+    flex: 1
   },
   paragraph: {
     color: '#34495e',
+    flex: 1
   },
   textContainer: {
-    flex: 2
+    flex: 2,
+    flexGrow: 2,
   },
   infoContainer: {
     display: 'flex',
     flexWrap: 'nowrap',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    width: Dimensions.get('window').width,
   }
 });
