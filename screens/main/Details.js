@@ -65,7 +65,7 @@ const Details = (props) => {
                     </Text>
                     <ScrollView style={styles.description}>
                         <Text style={styles.paragraph}>
-                            {description}
+                            {description.trim()}
                         </Text>
                     </ScrollView>
                 </View>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     iconStyle: {
         flex: 1,
-        padding: 25,
+        padding: 16,
         height: '100%',
         // justifyContent: 'center',
         alignItems: 'center',
@@ -166,6 +166,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     description: {
-        height: Dimensions.get('window').width / 10
+        height: Dimensions.get('window').height / 10
     }
 });
