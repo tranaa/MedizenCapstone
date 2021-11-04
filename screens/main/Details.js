@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         height: Dimensions.get('window').width / 2,
         width: Dimensions.get('window').width / 2,
-        padding: 10,
-        margin: 10,
+        padding: 8,
+        margin: 8,
     },
     imgBox: {
         borderColor: '#ccc',
@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         alignItems: 'center',
-        marginTop: 30,
-        paddingBottom: 30,
+        marginTop: 16,
+        paddingBottom: 16,
         borderBottomColor: '#ccc',
         borderBottomWidth: 2,
     },
@@ -132,9 +132,9 @@ const styles = StyleSheet.create({
         flexWrap: 'nowrap',
         // justifyContent: 'center',
         flexDirection: 'row',
-        padding: 16,
+        padding: 8,
         // marginTop: 16,
-        margin: 30,
+        margin: 16,
         // marginRight: 'auto',
         // alignContent: 'flex-start'
         // alignItems: 'center',
@@ -149,18 +149,18 @@ const styles = StyleSheet.create({
         flex: 2
     },
     header: {
-        marginBottom: 10,
+        marginBottom: 8,
         fontSize: 16,
         fontWeight: 'bold',
         color: '#34495e',
     },
     paragraph: {
-        marginBottom: 10,
+        marginBottom: 8,
         fontSize: 16,
         color: '#34495e',
     },
     editText: {
-        marginBottom: 10,
+        marginBottom: 8,
         fontSize: 14,
         color: '#34495e',
         alignSelf: 'center'
