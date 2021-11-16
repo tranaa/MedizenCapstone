@@ -159,7 +159,7 @@ function Profile(props) {
             </SafeAreaView>
         )
     }
-    console.log(props.route.params.moods.length)
+
     return (
         <View style={styles.container}>
             <View style={styles.containerInfo}>

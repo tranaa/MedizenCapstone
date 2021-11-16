@@ -10,7 +10,7 @@ import lvl1 from '../assets/lvl1.png'
 
 
 const MoodCard = (props) => {
-  const { mood } = props;
+  const { mood, onPress = () => {} } = props;
   const {
     creation = "",
     moodComment = "",
@@ -38,21 +38,23 @@ const MoodCard = (props) => {
   const dateArray = fullDate.split(" ")
   const date = `${dateArray[0]} ${dateArray[1]} ${dateArray[2]} ${dateArray[3]}`
   return (
-    <Card class="mood-card" elevation={7}>
-      <View style={styles.infoContainer}>
-        <View style={styles.imageContainer}>
-          <Image source={image} style={styles.image}/>
+    <TouchableOpacity onPress={onPress}>
+      <Card class="mood-card" elevation={7}>
+        <View style={styles.infoContainer}>
+          <View style={styles.imageContainer}>
+            <Image source={image} style={styles.image}/>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.header}>
+              {date}
+            </Text>
+            <Text style={styles.paragraph}>
+              {moodComment.length >= 50 ? `${moodComment.substring(0, 50)}...` : `${moodComment}`}
+            </Text>
+          </View>
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.header}>
-            {date}
-          </Text>
-          <Text style={styles.paragraph}>
-            {moodComment}
-          </Text>
-        </View>
-      </View>
-    </Card>
+      </Card>
+    </TouchableOpacity>
   );
 };
 

@@ -12,7 +12,6 @@ const Details = (props) => {
     const { navigate } = props.navigation;
 
     const clickEdit = (id, name, dose, freq, desc, img, active) => {
-        console.log("edit works: " + id);
         navigate('EditMed', { mid: id, mmedName: name, mdosage: dose, mfrequency: freq, mdescription: desc, image: img, mactive: active })
     }
 
