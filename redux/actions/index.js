@@ -1,4 +1,4 @@
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USER_MOODS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
+import { USER_TODOLIST_STATE_CHANGE, USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USER_MOODS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USERS_DATA_STATE_CHANGE,USERS_POSTS_STATE_CHANGE, USERS_LIKES_STATE_CHANGE, CLEAR_DATA} from '../constants/index'
 import firebase from 'firebase'
 import { SnapshotViewIOSComponent } from 'react-native'
 require('firebase/firestore')
@@ -177,6 +177,26 @@ export function fetchUserMeds() {
                     }
                 })
                 dispatch({ type: USER_MEDICINES_STATE_CHANGE, medicines })
+            })
+    })
+}
+
+export function fetchUserToDoList() {
+    return ((dispatch) => {
+        firebase.firestore()
+            .collection("toDoList")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userToDoList")
+            .get()
+            .then((snapshot) => {
+                let toDoList = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return { 
+                        id, ...data 
+                    }
+                })
+                dispatch({ type: USER_TODOLIST_STATE_CHANGE, toDoList })
             })
     })
 }
