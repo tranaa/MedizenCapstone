@@ -187,6 +187,7 @@ export function fetchUserToDoList() {
             .collection("toDoList")
             .doc(firebase.auth().currentUser.uid)
             .collection("userToDoList")
+            .orderBy("creation", "desc")
             .get()
             .then((snapshot) => {
                 let toDoList = snapshot.docs.map(doc => {

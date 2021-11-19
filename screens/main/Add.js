@@ -4,7 +4,7 @@ import { Button, Input, CheckBox } from 'react-native-elements'
 import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
-import { fetchUserMeds } from '../../redux/actions/index'
+import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 
 
@@ -31,8 +31,26 @@ export default function Add({ navigation }) {
           description: description.trim(),
           active,
           creation: firebase.firestore.FieldValue.serverTimestamp()
-        }).then((function () {
+        })
+        .then(() => {
+          if(active){
+            firebase.firestore()
+              .collection('toDoList')
+              .doc(firebase.auth().currentUser.uid)
+              .collection("userToDoList")
+              .add({
+                medName: medName.trim(),
+                dosage: dosage.trim(),
+                frequency: frequency.trim(),
+                description: description.trim(),
+                active,
+                creation: firebase.firestore.FieldValue.serverTimestamp()
+              })
+          }
+        })
+        .then((function () {
           fetchUserMeds()
+          fetchUserToDoList()
           setNameError("")
           setDosageError("")
           setFreqError("")

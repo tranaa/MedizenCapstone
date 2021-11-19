@@ -36,14 +36,16 @@ function Feed(props) {
             let medsFiltered = props.medicines.filter(med => med.active)
             const toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
             let toDoListDate = null
-            toDoListRef.onSnapshot((snapshot) => {
-                if(snapshot.exists){
-                    toDoListDate = snapshot.data().creation
-                }                
-            })
+            if (toDoListRef.exists) {
+                toDoListRef.onSnapshot((snapshot) => {
+                    if(snapshot.exists){
+                        toDoListDate = snapshot.data().creation
+                    }                
+                })
+            }
             const todayDate = new Date()
             toDoListRef.get().then((doc) => {
-                if (!doc.exists || !sameDay(toDoListDate.toDate(),todayDate)) {
+                if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
                     console.log("I RUN")
                     firebase.firestore()
                         .collection('toDoList')
@@ -96,7 +98,7 @@ function Feed(props) {
     }
 
 
-    if (loading ?? props.medicines != 0) {
+    if (loading && props.medicines == 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#00ff00" />
@@ -119,7 +121,7 @@ function Feed(props) {
         </View>
     );
 
-    if(toDoList.length == 0) {
+    if(!loading && toDoList.length == 0 && props.medicines == 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <Text>All Medication Taken for Today</Text>
