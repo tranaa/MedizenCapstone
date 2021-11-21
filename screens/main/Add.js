@@ -32,12 +32,13 @@ export default function Add({ navigation }) {
           active,
           creation: firebase.firestore.FieldValue.serverTimestamp()
         })
-        .then(() => {
+        .then((docRef) => {
           if(active){
             firebase.firestore()
               .collection('toDoList')
               .doc(firebase.auth().currentUser.uid)
               .collection("userToDoList")
+              .doc(docRef.id)
               .add({
                 medName: medName.trim(),
                 dosage: dosage.trim(),
@@ -49,11 +50,12 @@ export default function Add({ navigation }) {
           }
         })
         .then((function () {
-          fetchUserMeds()
-          fetchUserToDoList()
-          setNameError("")
-          setDosageError("")
-          setFreqError("")
+          // remove this stuff
+          // fetchUserMeds()
+          // fetchUserToDoList()
+          // setNameError("")
+          // setDosageError("")
+          // setFreqError("")
           navigation.replace("Medizen")
         }))
     }

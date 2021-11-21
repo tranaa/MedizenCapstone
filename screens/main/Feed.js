@@ -46,7 +46,6 @@ function Feed(props) {
             const todayDate = new Date()
             toDoListRef.get().then((doc) => {
                 if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
-                    console.log("I RUN")
                     firebase.firestore()
                         .collection('toDoList')
                         .doc(firebase.auth().currentUser.uid)

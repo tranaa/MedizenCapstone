@@ -26,6 +26,7 @@ export default function EditMed({ navigation, route }) {
     // setMeds(medsFiltered);
     // setLoading(false);
     // }
+    console.log({edit2: mid})
     setMedName(mmedName)
     setDosage(mdosage)
     setFrequency(mfrequency)
@@ -34,6 +35,7 @@ export default function EditMed({ navigation, route }) {
   }, [route])
 
 
+  console.log({edit: mid})
   const editMedication = () => {
 
     if (validateForm()) {
@@ -79,11 +81,11 @@ export default function EditMed({ navigation, route }) {
           }
         })
         .then((function () {
-          fetchUserMeds()
-          fetchUserToDoList()
-          setNameError("")
-          setDosageError("")
-          setFreqError("")
+          // fetchUserMeds()
+          // fetchUserToDoList()
+          // setNameError("")
+          // setDosageError("")
+          // setFreqError("")
           // navigation.replace("Medizen")
 
           navigation.reset({

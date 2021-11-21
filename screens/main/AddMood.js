@@ -48,7 +48,7 @@ function AddMood(props) {
           .add({medName, dosage, frequency, description, active, creation})
         })
       }).then((function () {
-        fetchUserMoods()
+        // fetchUserMoods()
         navigation.reset({
           index: 0,
           routes: [{name: 'Medizen'}]

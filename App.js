@@ -53,9 +53,9 @@ export class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      load: false
+      load: false,
+      loggedIn: false
     }
-    
   }
 
   componentDidMount() {
@@ -69,7 +69,6 @@ export class App extends Component {
         this.setState({
           loggedIn: true,
           loaded: true
-          
         })
       }
     })
