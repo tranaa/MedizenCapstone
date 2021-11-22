@@ -6,7 +6,7 @@ import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 import firebase from 'firebase';
 require("firebase/firestore")
 require("firebase/firebase-storage")
-import { fetchUserMeds } from '../../redux/actions/index'
+import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 
 export default function EditMed(props) {
@@ -28,7 +28,7 @@ export default function EditMed(props) {
 
   useEffect(() => {
     // if (props.medicines.length !== 0) {
-    const { mid, mdosage, mmedName, mfrequency, mdescription, mactive } = route.params;
+    const { mid, mdosage, mmedName, mfrequency, mdescription, mactive, image } = route.params;
     // let medsFiltered = props.medicines.filter(med => med.active)
     // setMeds(medsFiltered);
     // setLoading(false);
@@ -60,21 +60,38 @@ export default function EditMed(props) {
             active,
             image: image,
             creation: firebase.firestore.FieldValue.serverTimestamp()
-
-          }).then((function () {
-
-            fetchUserMeds()
-
-            setNameError("")
-            setDosageError("")
-            setFreqError("")
-            // navigation.replace("Medizen")
-
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Medizen' }]
-            })
-          }))
+        })
+        .then(() => {
+          if(!active){
+            firebase.firestore()
+              .collection('toDoList')
+              .doc(firebase.auth().currentUser.uid)
+              .collection("userToDoList")
+              .doc(medId)
+              .delete()
+          } else {
+            console.log({image})
+            firebase.firestore()
+              .collection('toDoList')
+              .doc(firebase.auth().currentUser.uid)
+              .collection("userToDoList")
+              .doc(medId)
+              .update({
+                medName: medName.trim(),
+                dosage: dosage.trim(),
+                frequency: frequency.trim(),
+                description: description.trim(),
+                active: active,
+                creation: firebase.firestore.FieldValue.serverTimestamp()
+              })
+            }
+        })
+        .then((function () {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Medizen' }]
+          })
+        }))
       })
     }
   }
@@ -104,13 +121,12 @@ export default function EditMed(props) {
 
   const uploadImage = async () => {
     const uri = route.params.image;
+
     const childPath = `medications/${firebase.auth().currentUser.uid}/userMedications/${medId}/${Math.random().toString(36)}`;
     // console.log(mid)
     // console.log(childPath)
-
     const response = await fetch(uri);
     const blob = await response.blob();
-
     const task = firebase
       .storage()
       .ref()
@@ -123,8 +139,9 @@ export default function EditMed(props) {
 
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
-        savePostData(snapshot);
         console.log("snapshot: ", snapshot)
+        setImage(snapshot)
+        savePostData(snapshot)
       })
     }
 
@@ -136,7 +153,7 @@ export default function EditMed(props) {
   }
 
   const savePostData = (downloadURL) => {
-
+    setImage(downloadURL)
     firebase.firestore()
       .collection('medications')
       .doc(firebase.auth().currentUser.uid)
@@ -145,7 +162,14 @@ export default function EditMed(props) {
       .update({
         image: downloadURL,
       }).then(() => {
-        setImage(downloadURL)
+        firebase.firestore()
+        .collection('toDoList')
+        .doc(firebase.auth().currentUser.uid)
+        .collection("userToDoList")
+        .doc(medId)
+        .update({
+          image: downloadURL,
+        })
       }).then((function () {
         console.log("dlURL: ", downloadURL);
         // navigation.popToTop()
@@ -160,16 +184,15 @@ export default function EditMed(props) {
         </View>
 
         <View style={styles.imgBox}>
-          <Image source={{ uri: props.route.params.image ? props.route.params.image : imageDefault }} style={styles.image} />
+          <Image source={{ uri: route.params.image ? route.params.image : imageDefault }} style={styles.image} />
         </View>
 
         <View style={styles.iconStyle}>
           <TouchableOpacity style={styles.iconStyle} onPress={() => addImage(image)}>
-            <MaterialIcons name="add-a-photo" size={40} color="#666" />
+            <MaterialIcons name="add-a-photo" size={30} color="#666" />
             <Text style={styles.editText}>Add Image</Text>
           </TouchableOpacity>
         </View>
-
         <Input
           style={styles.input}
           placeholder="Name"
@@ -234,7 +257,7 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   iconStyle: {
-    padding: 10,
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -246,8 +269,8 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
-    height: Dimensions.get('window').width / 2,
-    width: Dimensions.get('window').width / 2,
+    height: Dimensions.get('window').width / 4,
+    width: Dimensions.get('window').width / 4,
     padding: 8,
     margin: 8,
   },

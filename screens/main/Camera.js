@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
     aspectRatio: 1
   },
   cameraButton: {
-    backgroundColor: '#92c05e!important'
+    backgroundColor: '#92c05e'
   }
 })

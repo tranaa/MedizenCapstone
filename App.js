@@ -21,6 +21,7 @@ import CommentScreen from './screens/main/Comments'
 import CameraScreen from './screens/main/Camera'
 import DetailsScreen from './screens/main/Details'
 import EditMedScreen from './screens/main/EditMed'
+import MoodDetailsScreen from './screens/main/MoodDetails'
 import { MyTheme } from './styles'
 
 
@@ -53,9 +54,9 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      load: false
+      load: false,
+      loggedIn: false
     }
-
   }
 
   componentDidMount() {
@@ -69,7 +70,6 @@ export class App extends Component {
         this.setState({
           loggedIn: true,
           loaded: true
-
         })
       }
     })
@@ -117,6 +117,7 @@ export class App extends Component {
                 <Stack.Screen name="EditMed" component={EditMedScreen} navigation={this.props.navigation} />
                 <Stack.Screen name="Details" component={DetailsScreen} navigation={this.props.navigation} />
                 <Stack.Screen name="Camera" component={CameraScreen} navigation={this.props.navigation} />
+                <Stack.Screen name="MoodDetails" component={MoodDetailsScreen} navigation={this.props.navigation} />
               </Stack.Navigator>
             </NavigationContainer>
           </Provider>

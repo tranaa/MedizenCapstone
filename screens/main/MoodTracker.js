@@ -11,7 +11,7 @@ import { fetchUserMoods } from '../../redux/actions';
 function MoodTracker(props) {
     const [moods, setMoods] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const { navigate } = props.navigation;
     useEffect(() => {
         props.fetchUserMoods();
     }, [])
@@ -23,6 +23,10 @@ function MoodTracker(props) {
         }
     }, [props.moods])
 
+    const onCardClick = (mood) => {
+        navigate('MoodDetails', mood)
+    }
+
     if(loading && props.moods.length != 0) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
@@ -32,22 +36,20 @@ function MoodTracker(props) {
     }
 
     return (
-        // <ScrollView style={styles.container}>
             <View style={styles.containerGallery}>
                 <FlatList
                     numColumns={1}
                     horizontal={false}
                     data={moods}
-                    renderItem={({item}) => (
-                        <MoodCard mood={item} />
-                    )}
+                    renderItem={({item}) => {
+                        return (
+                        <MoodCard mood={item} onPress={()=>onCardClick(item)}/>
+                    )}}
                     LisHeaderComponent={<></>}
                     ListFooterComponent={<></>}
                     style={{flex: 1}}
                 />
             </View>
-        // </ScrollView>
-
     )
 }
 

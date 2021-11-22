@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchUser, clearData, fetchUserMeds, fetchUserMoods } from '../redux/actions/index'
+import { fetchUser, clearData, fetchUserMeds, fetchUserMoods, fetchUserToDoList } from '../redux/actions/index'
 import { ThemeProvider } from 'react-native-elements';
 import { MyTheme } from '../styles';
 import MoodTracker from './main/MoodTracker'
@@ -27,6 +27,7 @@ export class Main extends Component {
         this.props.fetchUser();
         this.props.fetchUserMeds();
         this.props.fetchUserMoods();
+        this.props.fetchUserToDoList();
         async function registerForPushNotification() {
             const {status} = await Permissions.getAsync(Permissions.Notifications);
      
@@ -96,8 +97,9 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
     medicines: store.userState.medicines,
-    moods: store.userState.moods
+    moods: store.userState.moods,
+    toDoList: store.userState.toDoList
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, fetchUser, clearData, fetchUserMeds }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods, fetchUser, clearData, fetchUserMeds, fetchUserToDoList }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);

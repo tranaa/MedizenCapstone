@@ -18,7 +18,7 @@ const MedCard = (props) => {
       <Card class="med-card" elevation={7}>
         <View style={styles.infoContainer}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={{ uri: image ? image : "https://cdn-icons-png.flaticon.com/512/1529/1529570.png" }} style={styles.image} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.header}>

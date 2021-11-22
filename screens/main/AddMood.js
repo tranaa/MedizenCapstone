@@ -6,37 +6,56 @@ import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 require("firebase/firestore")
 import { fetchUserMoods } from '../../redux/actions/index'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
 
-export default function Add({ navigation }) {
- 
+function AddMood(props) {
+  const { navigation } = props;
   //Set the mood comment to the variable
   const [moodComment, setMoodComment] = useState("")
-
+  const [meds, setMeds] = useState([])
   //set the value of mood (1,- 4) where 1 is happy and 4 is bad day 
   const [value, setValue] = React.useState("");
+
+  useEffect(() => {
+    if (props.medicines.length !== 0) {
+        let medsFiltered = props.medicines.filter(med => med.active)
+        setMeds(medsFiltered);
+    }
+  }, [props.medicines])
   
 
   //function to add mood(It is from the onPress button)
   const addMood = () => {
     firebase.firestore()
-        .collection('moods')
-        .doc(firebase.auth().currentUser.uid)
-        .collection("userMood")
-        .add({
-            value,
-            moodComment,
-          creation: firebase.firestore.FieldValue.serverTimestamp()
-        }).then((function () {
-          fetchUserMoods()
-          // navigation.navigate("MoodTracker")
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Medizen'}]
-          })
-          
-        }))
+      .collection('moods')
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userMood")
+      .add({
+          value,
+          moodComment,
+        creation: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function(docRef) {
+        meds.forEach(med => {
+          const {medName, dosage, frequency, description, active, creation} = med
+          firebase.firestore()
+          .collection('moods')
+          .doc(firebase.auth().currentUser.uid)
+          .collection("userMood")
+          .doc(docRef.id)
+          .collection("medsTaken")
+          .add({medName, dosage, frequency, description, active, creation})
+        })
+      }).then((function () {
+        // fetchUserMoods()
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Medizen'}]
+        })
+    }))
   }
+
   const mood5 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl5.png')} />
   const mood4 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl4.png')} />
   const mood3 = () => <Image style = {{ width: 30, height: 30 }} source={require('../../assets/lvl3.png')} />
@@ -73,6 +92,17 @@ export default function Add({ navigation }) {
     </ScrollView>
   );
 }
+
+const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser,
+  medicines: store.userState.medicines,
+  moods: store.userState.moods,
+})
+
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(AddMood);
+
 
 const styles = StyleSheet.create({
   container: {

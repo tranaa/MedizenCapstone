@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform, TouchableOpacity, Image } from 'react-native';
 import { Button, Input, CheckBox } from 'react-native-elements'
-import firebase from 'firebase';
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
+import firebase from 'firebase'
 require("firebase/firestore")
-import { fetchUserMeds } from '../../redux/actions/index'
+require("firebase/firebase-storage")
+import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 import { MaterialIcons } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native';
@@ -12,6 +13,7 @@ import { useRoute } from '@react-navigation/native';
 
 export default function Add(props) {
 
+  const { navigation } = props;
   const { navigate } = props.navigation;
 
   const [medName, setMedName] = useState("");
@@ -23,6 +25,7 @@ export default function Add(props) {
   const [nameError, setNameError] = useState("")
   const [dosageError, setDosageError] = useState("")
   const [freqError, setFreqError] = useState("")
+  const [docRefId, setDocRefId] = useState("")
 
   const imageDefault = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
   // const imageDefault = "http://img.medscapestatic.com/pi/features/drugdirectory/octupdate/WHR01690.jpg";
@@ -42,10 +45,10 @@ export default function Add(props) {
           active,
           image: "https://cdn-icons-png.flaticon.com/512/1529/1529570.png",
           creation: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function (docRef) {
-          console.log("docRef ID: ", docRef.id);
-          uploadImage(docRef.id).then((function () {
-            props.navigation.reset({
+        }).then((docRef)=>{
+          uploadImage(docRef.id)
+          .then((function () {
+            navigation.reset({
               index: 0,
               routes: [{ name: 'Medizen' }]
             })
@@ -53,7 +56,6 @@ export default function Add(props) {
         })
     }
   }
-
   const validateForm = () => {
     var isValid = true;
     if (isEmptyString(medName)) {
@@ -72,14 +74,11 @@ export default function Add(props) {
   }
 
   const addImage = (img, addFlag) => {
-    setImage(img)
-    // console.log(props.route.params);
     console.log("camera works: " + img);
     navigate('Camera', { image: img, isAdd: true })
   }
 
   function getImage(isImage) {
-    // console.log(isImage != undefined)
     return (isImage ? image : imageDefault);
   }
 
@@ -103,8 +102,8 @@ export default function Add(props) {
 
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
-        savePostData(snapshot, id);
-        console.log(snapshot)
+        console.log("snapshot: ", snapshot)
+        savePostData(snapshot, id)
       })
     }
 
@@ -116,7 +115,6 @@ export default function Add(props) {
   }
 
   const savePostData = (downloadURL, mid) => {
-
     firebase.firestore()
       .collection('medications')
       .doc(firebase.auth().currentUser.uid)
@@ -124,9 +122,28 @@ export default function Add(props) {
       .doc(mid)
       .update({
         image: downloadURL,
-      })
+      }).then(() => {
+        if(active){
+          firebase.firestore()
+          .collection('toDoList')
+          .doc(firebase.auth().currentUser.uid)
+          .collection("userToDoList")
+          .doc(mid)
+          .set({
+            medName: medName.trim(),
+            dosage: dosage.trim(),
+            frequency: frequency.trim(),
+            description: description.trim(),
+            active,
+            creation: firebase.firestore.FieldValue.serverTimestamp(),
+            image: downloadURL,
+          })
+        }
+      }).then((function () {
+        console.log("dlURL: ", downloadURL);
+        // navigation.popToTop()
+      }))
   }
-
 
 
   return (
@@ -142,7 +159,7 @@ export default function Add(props) {
 
         <View style={styles.iconStyle}>
           <TouchableOpacity style={styles.iconStyle} onPress={() => addImage(image)}>
-            <MaterialIcons name="add-a-photo" size={40} color="#666" />
+            <MaterialIcons name="add-a-photo" size={30} color="#666" />
             <Text style={styles.editText}>Add Image</Text>
           </TouchableOpacity>
         </View>
@@ -221,7 +238,7 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   iconStyle: {
-    padding: 10,
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -256,8 +273,8 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
-    height: Dimensions.get('window').width / 2,
-    width: Dimensions.get('window').width / 2,
+    height: Dimensions.get('window').width / 4,
+    width: Dimensions.get('window').width / 4,
     padding: 8,
     margin: 8,
   },
