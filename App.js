@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
+import { LogBox } from 'react-native'
 import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID } from "@env"
 
 import { firebase } from '@firebase/app'
@@ -60,6 +61,9 @@ export class App extends Component {
   }
 
   componentDidMount() {
+    // if(Platform.OS !== 'web') {
+    //   LogBox.ignoreAllLogs()
+    // }
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.setState({

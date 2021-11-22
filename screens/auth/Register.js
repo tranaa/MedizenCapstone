@@ -84,6 +84,7 @@ export class Register extends Component {
                 <View style={styles.checkboxContainer}>
                     <Text style={styles.label}>{isViewable ? 'Hide' : 'Show'} password</Text>
                     <CheckBox
+                        style={{marginBottom: 0, alignSelf: 'center'}}
                         value={isViewable}
                         onValueChange={() => this.setState({ isViewable: !isViewable })}
                     />
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     checkbox: {
-        alignSelf: "center",
+        alignItems: "center",
     },
     label: {
         margin: 8,

@@ -22,7 +22,7 @@ const Details = (props) => {
 
     function getImage(isImage) {
         // console.log(isImage != undefined)
-        return (isImage != undefined ? isImage : imageDefault);
+        return (isImage ? isImage : imageDefault);
     }
 
     return (

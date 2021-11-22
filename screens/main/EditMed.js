@@ -44,56 +44,65 @@ export default function EditMed(props) {
 
   const editMedication = () => {
     if (validateForm()) {
-      uploadImage().then(() => {
-        console.log({ medName, dosage, frequency, description, active, image })
+      if(route.params.image) {
+        uploadImage()
+        .then(() => updateMed())
+      } else {
+        updateMed()
+      }
+    }
+  }
+
+  const updateMed = () => {
+    console.log({ medName, dosage, frequency, description, active, image })
+    firebase.firestore()
+      .collection('medications')
+      .doc(firebase.auth()
+        .currentUser.uid)
+      .collection("userMedications")
+      .doc(medId)
+      .update({
+        medName: medName.trim(),
+        dosage: dosage.trim(),
+        frequency: frequency.trim(),
+        description: description.trim(),
+        active,
+        creation: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      if(!active){
         firebase.firestore()
-          .collection('medications')
-          .doc(firebase.auth()
-            .currentUser.uid)
-          .collection("userMedications")
+          .collection('toDoList')
+          .doc(firebase.auth().currentUser.uid)
+          .collection("userToDoList")
+          .doc(medId)
+          .delete()
+      } else {
+        console.log({image})
+        firebase.firestore()
+          .collection('toDoList')
+          .doc(firebase.auth().currentUser.uid)
+          .collection("userToDoList")
           .doc(medId)
           .update({
             medName: medName.trim(),
             dosage: dosage.trim(),
             frequency: frequency.trim(),
             description: description.trim(),
-            active,
-            image: image,
+            active: active,
             creation: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-          if(!active){
-            firebase.firestore()
-              .collection('toDoList')
-              .doc(firebase.auth().currentUser.uid)
-              .collection("userToDoList")
-              .doc(medId)
-              .delete()
-          } else {
-            console.log({image})
-            firebase.firestore()
-              .collection('toDoList')
-              .doc(firebase.auth().currentUser.uid)
-              .collection("userToDoList")
-              .doc(medId)
-              .update({
-                medName: medName.trim(),
-                dosage: dosage.trim(),
-                frequency: frequency.trim(),
-                description: description.trim(),
-                active: active,
-                creation: firebase.firestore.FieldValue.serverTimestamp()
-              })
-            }
-        })
-        .then((function () {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Medizen' }]
           })
-        }))
+        }
+    })
+    .then((function () {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Medizen' }],
+        params: {
+          reload: true
+        } 
       })
-    }
+    }))
   }
 
   const validateForm = () => {
@@ -140,7 +149,7 @@ export default function EditMed(props) {
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
         console.log("snapshot: ", snapshot)
-        setImage(snapshot)
+        // setImage(snapshot)
         savePostData(snapshot)
       })
     }
@@ -153,7 +162,7 @@ export default function EditMed(props) {
   }
 
   const savePostData = (downloadURL) => {
-    setImage(downloadURL)
+    // setImage(downloadURL)
     firebase.firestore()
       .collection('medications')
       .doc(firebase.auth().currentUser.uid)

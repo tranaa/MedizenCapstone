@@ -46,13 +46,41 @@ export default function Add(props) {
           image: "https://cdn-icons-png.flaticon.com/512/1529/1529570.png",
           creation: firebase.firestore.FieldValue.serverTimestamp()
         }).then((docRef)=>{
-          uploadImage(docRef.id)
-          .then((function () {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Medizen' }]
-            })
-          }))
+          if(props.route.params.image) {
+            uploadImage(docRef.id)
+            .then((function () {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Medizen' }]
+              })
+            }))
+          } else {
+            if(active){
+              firebase.firestore()
+              .collection('toDoList')
+              .doc(firebase.auth().currentUser.uid)
+              .collection("userToDoList")
+              .doc(docRef.id)
+              .set({
+                medName: medName.trim(),
+                dosage: dosage.trim(),
+                frequency: frequency.trim(),
+                description: description.trim(),
+                active,
+                creation: firebase.firestore.FieldValue.serverTimestamp(),
+                image: "",
+              })
+              .then((function () {
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Medizen' }],
+                  params: {
+                    reload: true
+                  } 
+                })
+              }))
+            }
+          }
         })
     }
   }
@@ -140,6 +168,8 @@ export default function Add(props) {
           })
         }
       }).then((function () {
+        props.fetchUserMeds()
+        props.fetchUserToDoList()
         console.log("dlURL: ", downloadURL);
         // navigation.popToTop()
       }))

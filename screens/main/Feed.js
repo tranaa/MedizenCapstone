@@ -21,6 +21,7 @@ function Feed(props) {
     }
 
     useEffect(() => {
+        props.fetchUserToDoList()
         props.fetchUserMeds();
     }, [])
 
@@ -37,35 +38,38 @@ function Feed(props) {
             setToDoList(props.toDoList)
         } else {
             let medsFiltered = props.medicines.filter(med => med.active)
-            const toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
-            let toDoListDate = null
-            if (toDoListRef.exists) {
-                toDoListRef.onSnapshot((snapshot) => {
-                    if(snapshot.exists){
-                        toDoListDate = snapshot.data().creation
-                    }                
-                })
-            }
-            const todayDate = new Date()
-            toDoListRef.get().then((doc) => {
-                if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
-                    firebase.firestore()
-                        .collection('toDoList')
-                        .doc(firebase.auth().currentUser.uid)
-                        .set({
-                            creation: firebase.firestore.FieldValue.serverTimestamp()
-                        })
-                    medsFiltered.forEach(med => {
-                        const {medName, dosage, frequency, description, active, creation, id} = med
-                        firebase.firestore()
-                        .collection('toDoList')
-                        .doc(firebase.auth().currentUser.uid)
-                        .collection("userToDoList")
-                        .doc(id)
-                        .set({medName, dosage, frequency, description, active, creation})
+            let toDoListRef = null
+            if(firebase.auth().currentUser){
+                toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
+                let toDoListDate = null
+                if (toDoListRef.exists) {
+                    toDoListRef.onSnapshot((snapshot) => {
+                        if(snapshot.exists){
+                            toDoListDate = snapshot.data().creation
+                        }                
                     })
                 }
-            })
+                const todayDate = new Date()
+                toDoListRef.get().then((doc) => {
+                    if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
+                        firebase.firestore()
+                            .collection('toDoList')
+                            .doc(firebase.auth().currentUser.uid)
+                            .set({
+                                creation: firebase.firestore.FieldValue.serverTimestamp()
+                            })
+                        medsFiltered.forEach(med => {
+                            const {medName, dosage, frequency, description, active, creation, id} = med
+                            firebase.firestore()
+                            .collection('toDoList')
+                            .doc(firebase.auth().currentUser.uid)
+                            .collection("userToDoList")
+                            .doc(id)
+                            .set({medName, dosage, frequency, description, active, creation})
+                        })
+                    }
+                })
+            }
         }
     }, [props.toDoList])
 
@@ -99,15 +103,6 @@ function Feed(props) {
         updateToDoList(item)
     }
 
-    if (props.toDoList.length == 0) {
-        return (
-            <SafeAreaView style={styles.loadingContainer}>
-                <Text>No Meds</Text>
-            </SafeAreaView>
-        )
-    }
-
-
     if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
@@ -115,6 +110,14 @@ function Feed(props) {
             </SafeAreaView>
         )
     }
+
+    // if (!loading && (props.toDoList.length == 0 || props.medicines.length == 0)) {
+    //     return (
+    //         <SafeAreaView style={styles.loadingContainer}>
+    //             <Text>No Meds</Text>
+    //         </SafeAreaView>
+    //     )
+    // }
 
     const renderItem = ({item}) => (
         <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />

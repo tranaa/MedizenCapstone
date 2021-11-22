@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, Dimensions, Text, Image, TouchableOpacity } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import PillImage from '../assets/pill.png'
 
 const MedCard = (props) => {
   const { medication = {
