@@ -5,9 +5,10 @@ import MediCard from '../../components/MedCard';
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Touchable } from 'react-native';
-
+import { fetchUserMeds } from '../../redux/actions/index'
 function Feed(props) {
     const [meds, setMeds] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,6 +18,9 @@ function Feed(props) {
     const clickCard = (id, name, dose, freq, desc, img, active) => {
         navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
+    useEffect(() => {
+        props.fetchUserMeds();
+    }, [])
 
     useEffect(() => {
         if (props.medicines.length !== 0) {
@@ -37,20 +41,20 @@ function Feed(props) {
     return (
         // <ScrollView style={styles.container}>
         //     <View style={styles.containerGallery}>
-                <FlatList
-                    numColumns={1}
-                    horizontal={false}
-                    keyExtractor={(item) => item.id}
-                    data={meds}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity>
-                            <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
-                        </TouchableOpacity>
-                    )}
-                    LisHeaderComponent={<></>}
-                    ListFooterComponent={<></>}
-                    style={{flex: 1}}
-                />
+        <FlatList
+            numColumns={1}
+            horizontal={false}
+            keyExtractor={(item) => item.id}
+            data={meds}
+            renderItem={({ item }) => (
+                <TouchableOpacity>
+                    <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
+                </TouchableOpacity>
+            )}
+            LisHeaderComponent={<></>}
+            ListFooterComponent={<></>}
+            style={{ flex: 1 }}
+        />
         //     </View>
         // </ScrollView>
     )
@@ -88,4 +92,7 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     medicines: store.userState.medicines
 })
-export default connect(mapStateToProps, null)(Feed);
+
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMeds }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(Feed);

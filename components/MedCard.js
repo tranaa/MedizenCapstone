@@ -11,8 +11,8 @@ const MedCard = (props) => {
     description: "Anxiety medication",
     image: "https://cdn-icons-png.flaticon.com/512/1529/1529570.png"
   }, onPress = () => { } } = props;
-  const { dosage, medName, frequency, description } = medication;
-  const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
+  const { dosage, medName, frequency, description, image } = medication;
+  // const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
   return (
     <TouchableOpacity onPress={onPress}>
       <Card class="med-card" elevation={7}>

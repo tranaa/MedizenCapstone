@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { Button, Input, CheckBox } from 'react-native-elements'
-import firebase from 'firebase';
+import { MaterialIcons } from '@expo/vector-icons'
 import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
+import firebase from 'firebase';
 require("firebase/firestore")
+require("firebase/firebase-storage")
 import { fetchUserMeds } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 
+export default function EditMed(props) {
+  const { navigation, route } = props
+  const imageDefault = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
 
-export default function EditMed({ navigation, route }) {
+
+  // const { navigate } = props.navigation;
+  const [medId, setMedId] = useState("")
   const [medName, setMedName] = useState("");
   const [dosage, setDosage] = useState("");
   const [frequency, setFrequency] = useState("");
   const [description, setDescription] = useState("")
-  const [active, setActive] = useState("")
+  const [active, setActive] = useState(false)
+  const [image, setImage] = useState("")
   const [nameError, setNameError] = useState("")
   const [dosageError, setDosageError] = useState("")
   const [freqError, setFreqError] = useState("")
 
-  const { mid } = route.params;
   useEffect(() => {
     // if (props.medicines.length !== 0) {
     const { mid, mdosage, mmedName, mfrequency, mdescription, mactive } = route.params;
@@ -26,46 +33,49 @@ export default function EditMed({ navigation, route }) {
     // setMeds(medsFiltered);
     // setLoading(false);
     // }
+    setMedId(mid)
     setMedName(mmedName)
     setDosage(mdosage)
     setFrequency(mfrequency)
     setDescription(mdescription)
     setActive(mactive)
-  }, [route])
+  }, [])
 
 
   const editMedication = () => {
-
     if (validateForm()) {
+      uploadImage().then(() => {
+        console.log({ medName, dosage, frequency, description, active, image })
+        firebase.firestore()
+          .collection('medications')
+          .doc(firebase.auth()
+            .currentUser.uid)
+          .collection("userMedications")
+          .doc(medId)
+          .update({
+            medName: medName.trim(),
+            dosage: dosage.trim(),
+            frequency: frequency.trim(),
+            description: description.trim(),
+            active,
+            image: image,
+            creation: firebase.firestore.FieldValue.serverTimestamp()
 
-      firebase.firestore()
-        .collection('medications')
-        .doc(firebase.auth()
-          .currentUser.uid)
-        .collection("userMedications")
-        .doc(mid)
-        .update({
-          medName: medName.trim(),
-          dosage: dosage.trim(),
-          frequency: frequency.trim(),
-          description: description.trim(),
-          active: active,
-          creation: firebase.firestore.FieldValue.serverTimestamp()
+          }).then((function () {
 
-        }).then((function () {
+            fetchUserMeds()
 
-          fetchUserMeds()
+            setNameError("")
+            setDosageError("")
+            setFreqError("")
+            // navigation.replace("Medizen")
 
-          setNameError("")
-          setDosageError("")
-          setFreqError("")
-          // navigation.replace("Medizen")
-
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Medizen' }]
-          })
-        }))
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Medizen' }]
+            })
+          }))
+      })
     }
   }
 
@@ -86,12 +96,80 @@ export default function EditMed({ navigation, route }) {
     return isValid
   }
 
+  const addImage = () => {
+    // setImage(img)
+    // console.log("camera works: ");
+    navigation.navigate('Camera', { isAdd: false })
+  }
+
+  const uploadImage = async () => {
+    const uri = route.params.image;
+    const childPath = `medications/${firebase.auth().currentUser.uid}/userMedications/${medId}/${Math.random().toString(36)}`;
+    // console.log(mid)
+    // console.log(childPath)
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const task = firebase
+      .storage()
+      .ref()
+      .child(childPath)
+      .put(blob);
+
+    const taskProgress = snapshot => {
+      console.log(`transferred: ${snapshot.bytesTransferred}`)
+    }
+
+    const taskCompleted = () => {
+      task.snapshot.ref.getDownloadURL().then((snapshot) => {
+        savePostData(snapshot);
+        console.log("snapshot: ", snapshot)
+      })
+    }
+
+    const taskError = snapshot => {
+      console.log("snapshot: ", snapshot)
+    }
+
+    task.on("state_changed", taskProgress, taskError, taskCompleted);
+  }
+
+  const savePostData = (downloadURL) => {
+
+    firebase.firestore()
+      .collection('medications')
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userMedications")
+      .doc(medId)
+      .update({
+        image: downloadURL,
+      }).then(() => {
+        setImage(downloadURL)
+      }).then((function () {
+        console.log("dlURL: ", downloadURL);
+        // navigation.popToTop()
+      }))
+  }
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <Text style={styles.header}>Edit Medication</Text>
         </View>
+
+        <View style={styles.imgBox}>
+          <Image source={{ uri: props.route.params.image ? props.route.params.image : imageDefault }} style={styles.image} />
+        </View>
+
+        <View style={styles.iconStyle}>
+          <TouchableOpacity style={styles.iconStyle} onPress={() => addImage(image)}>
+            <MaterialIcons name="add-a-photo" size={40} color="#666" />
+            <Text style={styles.editText}>Add Image</Text>
+          </TouchableOpacity>
+        </View>
+
         <Input
           style={styles.input}
           placeholder="Name"
@@ -155,6 +233,24 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
+  iconStyle: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imgBox: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    // borderStyle: "dashed",
+    borderRadius: 10,
+  },
+  image: {
+    resizeMode: 'cover',
+    height: Dimensions.get('window').width / 2,
+    width: Dimensions.get('window').width / 2,
+    padding: 8,
+    margin: 8,
+  },
   fixedRatio: {
     flex: 1,
     aspectRatio: 1
@@ -171,7 +267,6 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   textArea: {
-    height: 150,
     fontSize: 18,
     justifyContent: "flex-start",
     borderBottomWidth: 1,
