@@ -103,21 +103,7 @@ function Feed(props) {
         updateToDoList(item)
     }
 
-    if (loading) {
-        return (
-            <SafeAreaView style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#00ff00" />
-            </SafeAreaView>
-        )
-    }
 
-    // if (!loading && (props.toDoList.length == 0 || props.medicines.length == 0)) {
-    //     return (
-    //         <SafeAreaView style={styles.loadingContainer}>
-    //             <Text>No Meds</Text>
-    //         </SafeAreaView>
-    //     )
-    // }
 
     const renderItem = ({item}) => (
         <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
@@ -134,13 +120,29 @@ function Feed(props) {
         </View>
     );
 
-    if(!loading && toDoList.length == 0 && props.medicines == 0) {
+    if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
-                <Text>All Medication Taken for Today</Text>
+                <ActivityIndicator size="large" color="#00ff00" />
             </SafeAreaView>
         )
     }
+
+    // if (!loading && (props.toDoList.length == 0 || props.medicines.length == 0)) {
+    //     return (
+    //         <SafeAreaView style={styles.loadingContainer}>
+    //             <Text>No Meds</Text>
+    //         </SafeAreaView>
+    //     )
+    // }
+
+    // if(!loading && toDoList.length == 0) {
+    //     return (
+    //         <SafeAreaView style={styles.loadingContainer}>
+    //             <Text>All Medication Taken for Today</Text>
+    //         </SafeAreaView>
+    //     )
+    // }
 
     return (
         <SwipeListView

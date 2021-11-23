@@ -84,6 +84,7 @@ export default function Add(props) {
         })
     }
   }
+  
   const validateForm = () => {
     var isValid = true;
     if (isEmptyString(medName)) {
@@ -168,8 +169,6 @@ export default function Add(props) {
           })
         }
       }).then((function () {
-        props.fetchUserMeds()
-        props.fetchUserToDoList()
         console.log("dlURL: ", downloadURL);
         // navigation.popToTop()
       }))
