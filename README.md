@@ -41,7 +41,7 @@ Please have the following installed:
    expo start
    ```
  
-### environment setup
+### Environment setup
 1. Create a Google Firebase account
 2. Go to your console via clicking console or get started (https://console.firebase.google.com/)
 3. Add project with desired name
