@@ -36,7 +36,8 @@ Please have the following installed:
    PROJECT_ID= 
    STORAGE_BUCKET= 
    MESSENGING_SENDER_ID= 
-   APP_ID=```
+   APP_ID=
+   ```
 9. Click continue to console in Firebase
 10. On the left side of screen click Authentication
 11. Select sign-in method and add/enable email/password as providers
