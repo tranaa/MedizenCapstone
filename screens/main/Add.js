@@ -10,7 +10,7 @@ import { isEmptyString } from '../../utils';
 import { MaterialIcons } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native';
 
-
+// Add Medication component, this page allows users to add a single medication's info/image
 export default function Add(props) {
 
   const { navigation } = props;
