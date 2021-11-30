@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera';
 import { Button } from 'react-native-elements'
 import * as ImagePicker from 'expo-image-picker';
 
-
+// camera component, this is the camera screen that provies the ability to take/select images of medications
 export default function MedCamera(props) {
   const { navigation, route } = props
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
