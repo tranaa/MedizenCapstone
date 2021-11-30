@@ -7,12 +7,12 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 const Details = (props) => {
 
-    const { medid, dosage, medName, frequency, description, active } = props.route.params;
-    const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
+    const { medid, dosage, medName, frequency, description, active, image } = props.route.params;
+    const imageDefault = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
     const { navigate } = props.navigation;
 
+    console.log(image);
     const clickEdit = (id, name, dose, freq, desc, img, active) => {
-        console.log({id})
         navigate('EditMed', { mid: id, mmedName: name, mdosage: dose, mfrequency: freq, mdescription: desc, image: img, mactive: active })
     }
 
@@ -20,13 +20,17 @@ const Details = (props) => {
         return (isActive ? 'Yes' : 'No');
     }
 
-    console.log({medid})
+    function getImage(isImage) {
+        // console.log(isImage != undefined)
+        return (isImage ? isImage : imageDefault);
+    }
+
     return (
         <View>
             <View style={styles.topContainer}>
                 <View style={styles.imageContainer}>
                     <View style={styles.imgBox}>
-                        <Image source={{ uri: image }} style={styles.image} />
+                        <Image source={{ uri: getImage(image) }} style={styles.image} />
                     </View>
                 </View>
             </View>

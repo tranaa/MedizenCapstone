@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, Dimensions, Text, Image, TouchableOpacity } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import PillImage from '../assets/pill.png'
 
 const MedCard = (props) => {
   const { medication = {
@@ -11,14 +12,14 @@ const MedCard = (props) => {
     description: "Anxiety medication",
     image: "https://cdn-icons-png.flaticon.com/512/1529/1529570.png"
   }, onPress = () => { } } = props;
-  const { dosage, medName, frequency, description } = medication;
-  const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
+  const { dosage, medName, frequency, description, image } = medication;
+  // const image = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
   return (
     <TouchableOpacity onPress={onPress}>
       <Card class="med-card" elevation={7}>
         <View style={styles.infoContainer}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={{ uri: image ? image : "https://cdn-icons-png.flaticon.com/512/1529/1529570.png" }} style={styles.image} />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.header}>

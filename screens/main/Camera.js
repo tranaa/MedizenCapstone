@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { Camera } from 'expo-camera';
+import { Button } from 'react-native-elements'
 import * as ImagePicker from 'expo-image-picker';
 
 
-export default function Camera({ navigation }) {
+export default function MedCamera(props) {
+  const { navigation, route } = props
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  console.log(route.params)
 
   useEffect(() => {
     (async () => {
@@ -18,7 +21,6 @@ export default function Camera({ navigation }) {
 
       const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === 'granted');
-
 
     })();
   }, []);
@@ -44,13 +46,14 @@ export default function Camera({ navigation }) {
     }
   };
 
-
   if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
   if (hasCameraPermission === false || hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
+
+  const { isAdd } = route.params
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.cameraContainer}>
@@ -71,9 +74,9 @@ export default function Camera({ navigation }) {
           );
         }}>
       </Button>
-      <Button title="Take Picture" onPress={() => takePicture()} />
-      <Button title="Pick Image From Gallery" onPress={() => pickImage()} />
-      <Button title="Save" onPress={() => navigation.navigate('Save', { image })} />
+      <Button title="Take Picture" style={{ backgroundColor: '#92c05e' }} onPress={() => takePicture()} />
+      <Button title="Pick Image From Gallery" style={styles.cameraButton} onPress={() => pickImage()} />
+      <Button title="Save" style={styles.cameraButton} onPress={() => navigation.navigate(isAdd ? 'Add' : 'EditMed', { image })} />
       {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
     </View>
   );
@@ -87,5 +90,8 @@ const styles = StyleSheet.create({
   fixedRatio: {
     flex: 1,
     aspectRatio: 1
+  },
+  cameraButton: {
+    backgroundColor: '#92c05e'
   }
 })

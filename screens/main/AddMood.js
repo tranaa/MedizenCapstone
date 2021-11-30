@@ -38,14 +38,14 @@ function AddMood(props) {
         creation: firebase.firestore.FieldValue.serverTimestamp()
       }).then(function(docRef) {
         meds.forEach(med => {
-          const {medName, dosage, frequency, description, active, creation} = med
+          const {medName, dosage, frequency, description, active, creation, image} = med
           firebase.firestore()
           .collection('moods')
           .doc(firebase.auth().currentUser.uid)
           .collection("userMood")
           .doc(docRef.id)
           .collection("medsTaken")
-          .add({medName, dosage, frequency, description, active, creation})
+          .add({medName, dosage, frequency, description, active, image, creation})
         })
       }).then((function () {
         // fetchUserMoods()

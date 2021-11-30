@@ -145,7 +145,7 @@ function Profile(props) {
 
     const onLogout = () => {
         props.clearData();
-        firebase.auth().signOut();
+        firebase.auth().signOut().then(() => navigate('Login'));
     }
 
     if (user === null) {

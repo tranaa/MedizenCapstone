@@ -15,6 +15,7 @@ import lvl1 from '../../assets/lvl1.png'
 
 const MoodDetails = (props) => {
 
+    console.log({test: props.route.params})
     const { id, moodComment, value, creation } = props.route.params;
     console.log(props)
     const { navigate } = props.navigation;
@@ -87,9 +88,10 @@ const MoodDetails = (props) => {
                 numColumns={1}
                 keyExtractor={(item) => item.id}
                 data={meds}
-                renderItem={({ item }) => (
-                    <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
-                )}
+                renderItem={({ item }) => {
+                    console.log({item})
+                    return (<MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
+                )}}
                 style={{flex: 1}}
             />
         </>
@@ -140,6 +142,6 @@ const styles = StyleSheet.create({
     paragraph: {
         fontSize: 14,
         color: '#34495e',
-        height: Dimensions.get('window').height / 5,
+        maxHeight: Dimensions.get('window').height / 5,
     },
 });

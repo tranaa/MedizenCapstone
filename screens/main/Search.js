@@ -5,7 +5,9 @@ import MediCard from '../../components/MedCard';
 import firebase from 'firebase';
 require('firebase/firestore');
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { isEmptyString } from '../../utils';
+import { fetchUserMeds } from '../../redux/actions/index'
 
 function Search(props) {
     const [meds, setMeds] = useState([]);
@@ -14,6 +16,10 @@ function Search(props) {
 
     const { navigate } = props.navigation;
     
+    useEffect(() => {
+        props.fetchUserMeds();
+    }, [])
+
     const clickCard = (id, name, dose, freq, desc, img, active) => {
         navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
@@ -94,4 +100,6 @@ const mapStateToProps = (store) => ({
     medicines: store.userState.medicines
 })
 
-export default connect(mapStateToProps, null)(Search)
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMeds }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(Search)

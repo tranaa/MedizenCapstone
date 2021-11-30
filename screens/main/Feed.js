@@ -5,10 +5,9 @@ import MediCard from '../../components/MedCard';
 import firebase from 'firebase'
 require('firebase/firestore')
 import { connect } from 'react-redux'
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { fetchUserToDoList } from '../../redux/actions/index'
 import { bindActionCreators } from 'redux'
-
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { fetchUserToDoList, fetchUserMeds } from '../../redux/actions/index'
 
 function Feed(props) {
     const [meds, setMeds] = useState([]);
@@ -20,6 +19,11 @@ function Feed(props) {
     const clickCard = (id, name, dose, freq, desc, img, active) => {
         navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
+
+    useEffect(() => {
+        props.fetchUserToDoList()
+        props.fetchUserMeds();
+    }, [])
 
     useEffect(() => {
         if (props.medicines.length !== 0) {
@@ -34,35 +38,38 @@ function Feed(props) {
             setToDoList(props.toDoList)
         } else {
             let medsFiltered = props.medicines.filter(med => med.active)
-            const toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
-            let toDoListDate = null
-            if (toDoListRef.exists) {
-                toDoListRef.onSnapshot((snapshot) => {
-                    if(snapshot.exists){
-                        toDoListDate = snapshot.data().creation
-                    }                
-                })
-            }
-            const todayDate = new Date()
-            toDoListRef.get().then((doc) => {
-                if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
-                    firebase.firestore()
-                        .collection('toDoList')
-                        .doc(firebase.auth().currentUser.uid)
-                        .set({
-                            creation: firebase.firestore.FieldValue.serverTimestamp()
-                        })
-                    medsFiltered.forEach(med => {
-                        const {medName, dosage, frequency, description, active, creation, id} = med
-                        firebase.firestore()
-                        .collection('toDoList')
-                        .doc(firebase.auth().currentUser.uid)
-                        .collection("userToDoList")
-                        .doc(id)
-                        .set({medName, dosage, frequency, description, active, creation})
+            let toDoListRef = null
+            if(firebase.auth().currentUser){
+                toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
+                let toDoListDate = null
+                if (toDoListRef.exists) {
+                    toDoListRef.onSnapshot((snapshot) => {
+                        if(snapshot.exists){
+                            toDoListDate = snapshot.data().creation
+                        }                
                     })
                 }
-            })
+                const todayDate = new Date()
+                toDoListRef.get().then((doc) => {
+                    if (!doc.exists || toDoListDate == null || !sameDay(toDoListDate.toDate(),todayDate)) {
+                        firebase.firestore()
+                            .collection('toDoList')
+                            .doc(firebase.auth().currentUser.uid)
+                            .set({
+                                creation: firebase.firestore.FieldValue.serverTimestamp()
+                            })
+                        medsFiltered.forEach(med => {
+                            const {medName, dosage, frequency, description, active, creation, id} = med
+                            firebase.firestore()
+                            .collection('toDoList')
+                            .doc(firebase.auth().currentUser.uid)
+                            .collection("userToDoList")
+                            .doc(id)
+                            .set({medName, dosage, frequency, description, active, creation})
+                        })
+                    }
+                })
+            }
         }
     }, [props.toDoList])
 
@@ -97,13 +104,6 @@ function Feed(props) {
     }
 
 
-    if (loading && props.medicines == 0) {
-        return (
-            <SafeAreaView style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#00ff00" />
-            </SafeAreaView>
-        )
-    }
 
     const renderItem = ({item}) => (
         <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
@@ -120,13 +120,29 @@ function Feed(props) {
         </View>
     );
 
-    if(!loading && toDoList.length == 0 && props.medicines == 0) {
+    if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
-                <Text>All Medication Taken for Today</Text>
+                <ActivityIndicator size="large" color="#00ff00" />
             </SafeAreaView>
         )
     }
+
+    // if (!loading && (props.toDoList.length == 0 || props.medicines.length == 0)) {
+    //     return (
+    //         <SafeAreaView style={styles.loadingContainer}>
+    //             <Text>No Meds</Text>
+    //         </SafeAreaView>
+    //     )
+    // }
+
+    // if(!loading && toDoList.length == 0) {
+    //     return (
+    //         <SafeAreaView style={styles.loadingContainer}>
+    //             <Text>All Medication Taken for Today</Text>
+    //         </SafeAreaView>
+    //     )
+    // }
 
     return (
         <SwipeListView
@@ -210,6 +226,6 @@ const mapStateToProps = (store) => ({
     toDoList: store.userState.toDoList
 })
 
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserToDoList }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserToDoList, fetchUserMeds }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Feed);
