@@ -9,6 +9,7 @@ require("firebase/firebase-storage")
 import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 
+// Edit Medication component, this page allows users to edit a single medication's info/image
 export default function EditMed(props) {
   const { navigation, route } = props
   const imageDefault = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
