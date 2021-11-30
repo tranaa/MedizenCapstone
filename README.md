@@ -31,8 +31,8 @@ Please have the following installed:
    ```sh
    npm install
    ```
-3. Create env refer to env steps below
-4. Start application
+3. Create env refer to firebase/env steps below
+4. Start expo project
    ```sh
    npm start
    ```
@@ -40,8 +40,15 @@ Please have the following installed:
    ```sh
    expo start
    ```
- 
-### Environment setup
+5. Run application
+   1. Once expo has started a console will open in your browser
+   2. you can launch the project multiple ways
+   3. easiest is web browser (notifications will not work)
+   4. Steps for ios simulator https://docs.expo.dev/workflow/android-studio-emulator/
+   5. Steps for android simulator https://docs.expo.dev/workflow/ios-simulator/
+   6. Install expo app on mobile device and scan QR code
+
+### Firebase/Environment setup
 1. Create a Google Firebase account
 2. Go to your console via clicking console or get started (https://console.firebase.google.com/)
 3. Add project with desired name
