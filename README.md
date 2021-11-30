@@ -31,12 +31,12 @@ Please have the following installed:
    ![env variables to copy](https://i.imgur.com/xx1CFjf.png)
 7. Create an `.env` file at the root of the project directory
 8. Paste the content of firebaseConfig object in this format without quotes for string
-   API_KEY= 
+   ```API_KEY= 
    AUTH_DOMAIN= 
    PROJECT_ID= 
    STORAGE_BUCKET= 
    MESSENGING_SENDER_ID= 
-   APP_ID= 
+   APP_ID=```
 9. Click continue to console in Firebase
 10. On the left side of screen click Authentication
 11. Select sign-in method and add/enable email/password as providers
