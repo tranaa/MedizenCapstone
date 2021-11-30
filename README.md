@@ -20,8 +20,28 @@ Please have the following installed:
   ```sh
   npm i -g expo-cli
   ```
-  
-### env
+
+### Installation
+
+1. Clone the repo (if you have code already skip this step)
+   ```sh
+   git clone https://github.com/tranaa/MedizenCapstone.git
+   ```
+2. Navigate to root directory of project install NPM packages
+   ```sh
+   npm install
+   ```
+3. Create env refer to env steps below
+4. Start application
+   ```sh
+   npm start
+   ```
+   or 
+   ```sh
+   expo start
+   ```
+ 
+### environment setup
 1. Create a Google Firebase account
 2. Go to your console via clicking console or get started (https://console.firebase.google.com/)
 3. Add project with desired name
@@ -45,22 +65,3 @@ Please have the following installed:
 13. Click get started
 14. complete the setup confirm the default
 15. Create a folder called medications
-
-### Installation
-
-1. Clone the repo (if you have code already skip this step)
-   ```sh
-   git clone https://github.com/tranaa/MedizenCapstone.git
-   ```
-2. Navigate to root directory of project install NPM packages
-   ```sh
-   npm install
-   ```
-3. Start application
-   ```sh
-   npm start
-   ```
-   or 
-   ```sh
-   expo start
-   ```
