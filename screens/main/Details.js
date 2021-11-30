@@ -4,7 +4,7 @@ import { View, StyleSheet, Dimensions, Text, Image, ScrollView, TouchableOpacity
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { MaterialIcons } from '@expo/vector-icons'
 
-
+// Details component, this is the deatils screen that displays a medications info and leads to edit med form
 const Details = (props) => {
 
     const { medid, dosage, medName, frequency, description, active, image } = props.route.params;
