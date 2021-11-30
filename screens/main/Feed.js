@@ -29,8 +29,8 @@ function Feed(props) {
         if (props.medicines.length !== 0) {
             let medsFiltered = props.medicines.filter(med => med.active)
             setMeds(medsFiltered);
-            setLoading(false);
         }
+        setLoading(false);
     }, [props.medicines])
 
     useEffect(() => {
@@ -103,8 +103,6 @@ function Feed(props) {
         updateToDoList(item)
     }
 
-
-
     const renderItem = ({item}) => (
         <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
     );
@@ -120,6 +118,14 @@ function Feed(props) {
         </View>
     );
 
+    if (props.medicines.length == 0) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <Text>No Active Medication</Text>
+            </SafeAreaView>
+        )
+    }
+
     if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
@@ -127,14 +133,6 @@ function Feed(props) {
             </SafeAreaView>
         )
     }
-
-    // if (!loading && (props.toDoList.length == 0 || props.medicines.length == 0)) {
-    //     return (
-    //         <SafeAreaView style={styles.loadingContainer}>
-    //             <Text>No Meds</Text>
-    //         </SafeAreaView>
-    //     )
-    // }
 
     // if(!loading && toDoList.length == 0) {
     //     return (
