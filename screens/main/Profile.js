@@ -1,7 +1,6 @@
    
 import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, ScrollView, Touchable } from 'react-native'
-import MediCard from '../../components/MedCard';
+import { Dimensions, StyleSheet, View, Text, ScrollView } from 'react-native'
 import { Button  } from 'react-native-elements'
 import * as Notifications from 'expo-notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -12,12 +11,11 @@ import { fetchUserMoods, clearData } from '../../redux/actions';
 import { connect } from 'react-redux'
 import {
     LineChart,
-    BarChart,
     PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
   } from "react-native-chart-kit";
+
+// profile page - shows users information, log out ability and user stats
+// stats show pie chart with ratio of active to inactive and line chart of mood levels
 function Profile(props) {
     const [user, setUser] = useState(null);
     const [meds, setMeds] = useState([]);
@@ -345,6 +343,7 @@ const styles = StyleSheet.create({
     }
 })
 
+// connect component state to redux store state
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     medicines: store.userState.medicines,

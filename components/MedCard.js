@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, Dimensions, Text, Image, TouchableOpacity } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import PillImage from '../assets/pill.png'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Card } from 'react-native-elements';
+
+// custom card view to display summary of medication card view
 
 const MedCard = (props) => {
   const { medication = {

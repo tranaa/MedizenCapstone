@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, Dimensions, Text, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import { MaterialIcons } from '@expo/vector-icons'
-import { bindActionCreators } from 'redux'
 import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import lvl1 from '../../assets/lvl1.png';
+import lvl2 from '../../assets/lvl2.png';
+import lvl3 from '../../assets/lvl3.png';
+import lvl4 from '../../assets/lvl4.png';
+import lvl5 from '../../assets/lvl5.png';
 import MediCard from '../../components/MedCard';
 
-import lvl5 from '../../assets/lvl5.png'
-import lvl4 from '../../assets/lvl4.png'
-import lvl3 from '../../assets/lvl3.png'
-import lvl2 from '../../assets/lvl2.png'
-import lvl1 from '../../assets/lvl1.png'
 
+// view to display complete details of the mood - date, description, mood, and active medication at the time taking it
 const MoodDetails = (props) => {
 
     console.log({test: props.route.params})

@@ -3,6 +3,8 @@ import {View, TextInput, StyleSheet, Dimensions} from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
+// custom styled input for login and register page
+
 const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
   return (
     <View style={styles.inputContainer}>

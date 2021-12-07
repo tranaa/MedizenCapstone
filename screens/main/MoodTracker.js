@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView, ActivityIndicator, Platform, SafeAreaView } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import MoodCard from '../../components/MoodCard';
-
-import firebase from 'firebase'
-require('firebase/firestore')
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { fetchUserMoods } from '../../redux/actions';
+
+require('firebase/firestore')
+
+// list view of all mood journal entires, items can be clicked to direct to mood details
 
 function MoodTracker(props) {
     const [moods, setMoods] = useState([]);
@@ -85,6 +86,7 @@ const mapStateToProps = (store) => ({
     moods: store.userState.moods,
 })
 
+// connect component state to redux store state
 const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUserMoods }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(MoodTracker);

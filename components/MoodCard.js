@@ -1,12 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {View, StyleSheet, Dimensions, Text, Image, TouchableOpacity} from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import lvl5 from '../assets/lvl5.png'
-import lvl4 from '../assets/lvl4.png'
-import lvl3 from '../assets/lvl3.png'
-import lvl2 from '../assets/lvl2.png'
-import lvl1 from '../assets/lvl1.png'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Card } from 'react-native-elements';
+import lvl1 from '../assets/lvl1.png';
+import lvl2 from '../assets/lvl2.png';
+import lvl3 from '../assets/lvl3.png';
+import lvl4 from '../assets/lvl4.png';
+import lvl5 from '../assets/lvl5.png';
+
+// custom card view to display summary of mood card view
 
 
 const MoodCard = (props) => {

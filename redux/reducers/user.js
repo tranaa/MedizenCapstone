@@ -1,9 +1,8 @@
-import { USER_TODOLIST_STATE_CHANGE, USER_MOODS_STATE_CHANGE, USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, CLEAR_DATA } from "../constants"
+import { USER_TODOLIST_STATE_CHANGE, USER_MOODS_STATE_CHANGE, USER_STATE_CHANGE, USER_MEDICINES_STATE_CHANGE, CLEAR_DATA } from "../constants"
 
+// user reducer, when action is called the action is triggered and this updates the reduce store with the state
 const initialState = {
     currentUser: null,
-    posts: [],
-    following: [],
     medicines: [],
     moods: [],
     toDoList: [],
@@ -15,16 +14,6 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 currentUser: action.currentUser
-            }
-        case USER_POSTS_STATE_CHANGE:
-            return {
-                ...state,
-                posts: action.posts
-            }
-        case USER_FOLLOWING_STATE_CHANGE:
-            return {
-                ...state,
-                following: action.following
             }
         case USER_MEDICINES_STATE_CHANGE:
             return {

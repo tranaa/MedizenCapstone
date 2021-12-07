@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Dimensions, StyleSheet, View, Text, Image, FlatList, Button, ScrollView, ActivityIndicator, Platform, SafeAreaView } from 'react-native'
-import MediCard from '../../components/MedCard';
-
-import firebase from 'firebase'
-require('firebase/firestore')
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { fetchUserToDoList, fetchUserMeds } from '../../redux/actions/index'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import MediCard from '../../components/MedCard';
+import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index';
 
+require('firebase/firestore')
+
+// feed is the home page, that shows the to do list of active medication
 function Feed(props) {
     const [meds, setMeds] = useState([]);
     const [toDoList, setToDoList] = useState([]);
@@ -20,19 +21,22 @@ function Feed(props) {
         navigate('Details', { medid: id, medName: name, dosage: dose, frequency: freq, description: desc, image: img, active: active })
     }
 
+    // on load it will fetch to do list and user meds
     useEffect(() => {
         props.fetchUserToDoList()
         props.fetchUserMeds();
     }, [])
 
+    // runs when redux state meds is updated to set new meds
     useEffect(() => {
         if (props.medicines.length !== 0) {
             let medsFiltered = props.medicines.filter(med => med.active)
             setMeds(medsFiltered);
+            setLoading(false);
         }
-        setLoading(false);
     }, [props.medicines])
 
+    // used to create to do list on loading
     useEffect(() => {
         if (props.toDoList.length !== 0) {
             setToDoList(props.toDoList)
@@ -73,13 +77,14 @@ function Feed(props) {
         }
     }, [props.toDoList])
 
+    // validation for date, if new date to do list resets to all active
     const sameDay = (d1, d2) => {
         return d1.getFullYear() === d2.getFullYear() &&
           d1.getMonth() === d2.getMonth() &&
           d1.getDate() === d2.getDate();
     }
 
-
+    // when you swipe away an item it will remove from to do list
     const updateToDoList = (item) => {
         const toDoListRef = firebase.firestore().collection('toDoList').doc(firebase.auth().currentUser.uid)
         const doc = toDoListRef.get();
@@ -103,10 +108,12 @@ function Feed(props) {
         updateToDoList(item)
     }
 
+    // render each med card
     const renderItem = ({item}) => (
         <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
     );
 
+    // render if complete
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
             <TouchableOpacity
@@ -118,14 +125,7 @@ function Feed(props) {
         </View>
     );
 
-    if (props.medicines.length == 0) {
-        return (
-            <SafeAreaView style={styles.loadingContainer}>
-                <Text>No Active Medication</Text>
-            </SafeAreaView>
-        )
-    }
-
+    // loading indicator
     if (loading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
@@ -134,40 +134,23 @@ function Feed(props) {
         )
     }
 
-    // if(!loading && toDoList.length == 0) {
-    //     return (
-    //         <SafeAreaView style={styles.loadingContainer}>
-    //             <Text>All Medication Taken for Today</Text>
-    //         </SafeAreaView>
-    //     )
-    // }
-
-    return (
-        <SwipeListView
-            data={toDoList}
-            renderItem={renderItem}
-            renderHiddenItem={renderHiddenItem}
-            rightOpenValue={-75}
-        />  
-        // <ScrollView style={styles.container}>
-        //     <View style={styles.containerGallery}>
-                // <FlatList
-                //     numColumns={1}
-                //     horizontal={false}
-                //     keyExtractor={(item) => item.id}
-                //     data={meds}
-                //     renderItem={({ item }) => (
-                //         <TouchableOpacity>
-                //             <MediCard medication={item} onPress={() => clickCard(item.id, item.medName, item.dosage, item.frequency, item.description, item.image, item.active)} />
-                //         </TouchableOpacity>
-                //     )}
-                //     LisHeaderComponent={<></>}
-                //     ListFooterComponent={<></>}
-                //     style={{flex: 1}}
-                // />
-        //     </View>
-        // </ScrollView>
-    )
+    // render list or no active meds
+    if (props.toDoList.length > 0) {
+        return (
+            <SwipeListView
+                data={toDoList}
+                renderItem={renderItem}
+                renderHiddenItem={renderHiddenItem}
+                rightOpenValue={-75}
+            />  
+        )
+    } else {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <Text>No Active Medication...</Text>
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -218,6 +201,7 @@ const styles = StyleSheet.create({
     }
 })
 
+// connect component state to redux store state
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     medicines: store.userState.medicines,

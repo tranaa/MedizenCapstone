@@ -1,12 +1,13 @@
    
-import React, { Component } from 'react'
-import { View, Button, TextInput, ScrollView, StyleSheet, Image,
-    Platform, StatusBar, CheckBox, Text } from 'react-native'
-import FormInput from '../../components/FormInput'
-import FormButton from '../../components/FormButton'
-
 import firebase from 'firebase'
-import "firebase/firestore";
+import "firebase/firestore"
+import React, { Component } from 'react'
+import { CheckBox, Platform, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
+import FormButton from '../../components/FormButton'
+import FormInput from '../../components/FormInput'
+
+
+// registration page that implements google authentication
 
 export class Register extends Component {
     constructor(props) {

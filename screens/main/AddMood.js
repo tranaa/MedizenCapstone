@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform,Image } from 'react-native';
-import { RadioButton } from 'react-native-paper';
-import { Button, Input, CheckBox, ButtonGroup  } from 'react-native-elements'
 import firebase from 'firebase';
-import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
+import React, { useEffect, useState } from 'react';
+import { Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, ButtonGroup } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUserMoods } from '../../redux/actions/index';
 require("firebase/firestore")
-import { fetchUserMoods } from '../../redux/actions/index'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
 
+//page to allow user to add their mood into journal can only come to this page via notification
 
 function AddMood(props) {
   const { navigation } = props;
@@ -93,6 +92,7 @@ function AddMood(props) {
   );
 }
 
+// connect component state to redux store state
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
   medicines: store.userState.medicines,

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform, TouchableOpacity, Image } from 'react-native';
 import { Button, Input, CheckBox } from 'react-native-elements'
-import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
 import firebase from 'firebase'
 require("firebase/firestore")
 require("firebase/firebase-storage")
-import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
 import { isEmptyString } from '../../utils';
 import { MaterialIcons } from '@expo/vector-icons'
-import { useRoute } from '@react-navigation/native';
 
 // Add Medication component, this page allows users to add a single medication's info/image
 export default function Add(props) {
@@ -28,9 +25,8 @@ export default function Add(props) {
   const [docRefId, setDocRefId] = useState("")
 
   const imageDefault = "https://cdn-icons-png.flaticon.com/512/1529/1529570.png";
-  // const imageDefault = "http://img.medscapestatic.com/pi/features/drugdirectory/octupdate/WHR01690.jpg";
-  // tried adding default
 
+  // function to add medication and also update to do list
   const addMedication = () => {
     if (validateForm()) {
       firebase.firestore()
@@ -85,6 +81,7 @@ export default function Add(props) {
     }
   }
   
+  // validation
   const validateForm = () => {
     var isValid = true;
     if (isEmptyString(medName)) {
@@ -102,15 +99,13 @@ export default function Add(props) {
     return isValid
   }
 
+  // nav to add image when user selects to use image
   const addImage = (img, addFlag) => {
     console.log("camera works: " + img);
     navigate('Camera', { image: img, isAdd: true })
   }
 
-  function getImage(isImage) {
-    return (isImage ? image : imageDefault);
-  }
-
+  // upload image when returns from camera
   const uploadImage = async (id) => {
     const uri = props.route.params.image;
     const childPath = `medications/${firebase.auth().currentUser.uid}/userMedications/${id}/${Math.random().toString(36)}`;
@@ -170,7 +165,6 @@ export default function Add(props) {
         }
       }).then((function () {
         console.log("dlURL: ", downloadURL);
-        // navigation.popToTop()
       }))
   }
 
@@ -235,8 +229,6 @@ export default function Add(props) {
         <Button
           onPress={() => {
             addMedication()
-            // console.log(docRef);
-            // console.log(docRef.id);
           }}
           title="Add Medication"
         />
@@ -297,7 +289,6 @@ const styles = StyleSheet.create({
   imgBox: {
     borderColor: '#ccc',
     borderWidth: 1,
-    // borderStyle: "dashed",
     borderRadius: 10,
   },
   image: {

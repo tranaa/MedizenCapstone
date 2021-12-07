@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TextInput, StatusBar, Platform, TouchableOpacity } from 'react-native';
-import { Button, Input, CheckBox } from 'react-native-elements'
-import { MaterialIcons } from '@expo/vector-icons'
-import { USER_MEDICINES_STATE_CHANGE } from '../../redux/constants';
+import { MaterialIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, CheckBox, Input } from 'react-native-elements';
+import { isEmptyString } from '../../utils';
 require("firebase/firestore")
 require("firebase/firebase-storage")
-import { fetchUserMeds, fetchUserToDoList } from '../../redux/actions/index'
-import { isEmptyString } from '../../utils';
 
 // Edit Medication component, this page allows users to edit a single medication's info/image
 export default function EditMed(props) {
@@ -28,12 +26,7 @@ export default function EditMed(props) {
   const [freqError, setFreqError] = useState("")
 
   useEffect(() => {
-    // if (props.medicines.length !== 0) {
     const { mid, mdosage, mmedName, mfrequency, mdescription, mactive, image } = route.params;
-    // let medsFiltered = props.medicines.filter(med => med.active)
-    // setMeds(medsFiltered);
-    // setLoading(false);
-    // }
     setMedId(mid)
     setMedName(mmedName)
     setDosage(mdosage)
@@ -124,17 +117,12 @@ export default function EditMed(props) {
   }
 
   const addImage = () => {
-    // setImage(img)
-    // console.log("camera works: ");
     navigation.navigate('Camera', { isAdd: false })
   }
 
   const uploadImage = async () => {
     const uri = route.params.image;
-
     const childPath = `medications/${firebase.auth().currentUser.uid}/userMedications/${medId}/${Math.random().toString(36)}`;
-    // console.log(mid)
-    // console.log(childPath)
     const response = await fetch(uri);
     const blob = await response.blob();
     const task = firebase
@@ -150,7 +138,6 @@ export default function EditMed(props) {
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
         console.log("snapshot: ", snapshot)
-        // setImage(snapshot)
         savePostData(snapshot)
       })
     }
@@ -163,7 +150,6 @@ export default function EditMed(props) {
   }
 
   const savePostData = (downloadURL) => {
-    // setImage(downloadURL)
     firebase.firestore()
       .collection('medications')
       .doc(firebase.auth().currentUser.uid)
@@ -182,7 +168,6 @@ export default function EditMed(props) {
         })
       }).then((function () {
         console.log("dlURL: ", downloadURL);
-        // navigation.popToTop()
       }))
   }
 
@@ -274,7 +259,6 @@ const styles = StyleSheet.create({
   imgBox: {
     borderColor: '#ccc',
     borderWidth: 1,
-    // borderStyle: "dashed",
     borderRadius: 10,
   },
   image: {

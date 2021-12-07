@@ -1,8 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, Dimensions, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import { MaterialIcons } from '@expo/vector-icons'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Details component, this is the deatils screen that displays a medications info and leads to edit med form
 const Details = (props) => {
@@ -21,7 +19,6 @@ const Details = (props) => {
     }
 
     function getImage(isImage) {
-        // console.log(isImage != undefined)
         return (isImage ? isImage : imageDefault);
     }
 
@@ -35,7 +32,6 @@ const Details = (props) => {
                 </View>
             </View>
             <View style={styles.detailsContainer}>
-                {/* <View style={styles.gapContainer}></View> */}
                 <View style={styles.headerContainer}>
                     <Text style={styles.header}>
                         Name:
@@ -98,16 +94,13 @@ const styles = StyleSheet.create({
     topContainer: {
         display: 'flex',
         flexWrap: 'nowrap',
-        // justifyContent: 'space-around',
         flexDirection: 'row',
-        // marginTop: 10,
         alignItems: 'flex-end'
     },
     iconStyle: {
         flex: 1,
         padding: 16,
         height: '100%',
-        // justifyContent: 'center',
         alignItems: 'center',
         width: 50,
     },
@@ -121,7 +114,6 @@ const styles = StyleSheet.create({
     imgBox: {
         borderColor: '#ccc',
         borderWidth: 1,
-        // borderStyle: "dashed",
         borderRadius: 10,
     },
     imageContainer: {
@@ -135,14 +127,9 @@ const styles = StyleSheet.create({
     detailsContainer: {
         display: 'flex',
         flexWrap: 'nowrap',
-        // justifyContent: 'center',
         flexDirection: 'row',
         padding: 8,
-        // marginTop: 16,
         margin: 16,
-        // marginRight: 'auto',
-        // alignContent: 'flex-start'
-        // alignItems: 'center',
     },
     gapContainer: {
         flex: 1,

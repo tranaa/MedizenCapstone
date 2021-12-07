@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, FlatList, TouchableOpacity, SafeAreaView, Dimensions, StyleSheet, ActivityIndicator, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, FlatList, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import MediCard from '../../components/MedCard';
-
-import firebase from 'firebase';
-require('firebase/firestore');
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { fetchUserMeds } from '../../redux/actions/index';
 import { isEmptyString } from '../../utils';
-import { fetchUserMeds } from '../../redux/actions/index'
+
+require('firebase/firestore');
+
+// page to search all medication, past and present via medication name
 
 function Search(props) {
     const [meds, setMeds] = useState([]);
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
     }
 })
 
+// connect component state to redux store state
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,

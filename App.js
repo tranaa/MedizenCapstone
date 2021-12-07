@@ -1,37 +1,27 @@
-import React, { Component } from 'react'
-import { Image, StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
-import { LogBox } from 'react-native'
-import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSENGING_SENDER_ID, APP_ID } from "@env"
-
+import { API_KEY, APP_ID, AUTH_DOMAIN, MESSENGING_SENDER_ID, PROJECT_ID, STORAGE_BUCKET } from "@env"
 import { firebase } from '@firebase/app'
-
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { ThemeProvider } from 'react-native-elements';
-
-import * as Notifications from 'expo-notifications';
-import RegisterScreen from './screens/auth/Register'
+import React, { Component } from 'react'
+import { Image, Platform, SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native'
+import { ThemeProvider } from 'react-native-elements'
+import { Provider } from 'react-redux'
+import { applyMiddleware, createStore } from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from './redux/reducers'
 import LoginScreen from './screens/auth/Login'
+import RegisterScreen from './screens/auth/Register'
 import MainScreen from './screens/Main'
 import AddMood from './screens/main/AddMood'
-import MoodTracker from './screens/main/MoodTracker'
-import AddScreen from './screens/main/Add'
-import SaveScreen from './screens/main/Save'
-import SearchScreen from './screens/main/Search'
-import CommentScreen from './screens/main/Comments'
 import CameraScreen from './screens/main/Camera'
 import DetailsScreen from './screens/main/Details'
 import EditMedScreen from './screens/main/EditMed'
 import MoodDetailsScreen from './screens/main/MoodDetails'
+import MoodTracker from './screens/main/MoodTracker'
+import SearchScreen from './screens/main/Search'
 import { MyTheme } from './styles'
 
-
-import { initializeApp } from "firebase/app";
-
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import rootReducer from './redux/reducers'
-import thunk from 'redux-thunk'
+// starting point of application, connects to firebase, and connects navigation through the app that is not reachable via tab view
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
@@ -61,9 +51,6 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    // if(Platform.OS !== 'web') {
-    //   LogBox.ignoreAllLogs()
-    // }
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.setState({
@@ -106,6 +93,7 @@ export class App extends Component {
       );
     }
 
+    // provides theme and redux store to all child components via provider
     return (
       <SafeAreaView style={styles.container}>
         <ThemeProvider theme={MyTheme} >
@@ -114,8 +102,6 @@ export class App extends Component {
               <Stack.Navigator initialRouteName="Medizen">
                 <Stack.Screen name="Medizen" component={MainScreen} navigation={this.props.navigation} />
                 <Stack.Screen name="Search" component={SearchScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation} />
-                <Stack.Screen name="Comment" component={CommentScreen} navigation={this.props.navigation} />
                 <Stack.Screen name="AddMood" component={AddMood} navigation={this.props.navigation} />
                 <Stack.Screen name="MoodTracker" component={MoodTracker} navigation={this.props.navigation} />
                 <Stack.Screen name="EditMed" component={EditMedScreen} navigation={this.props.navigation} />

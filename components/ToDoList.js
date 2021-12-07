@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import MediCard from './MedCard';
-import { Header, Item, Input } from 'native-base';
-import { StyleSheet, TouchableOpacity, View, Text, Button } from 'react-native';
+
+
+// custom component to create a to do list
 
 export default function ToDoList(props) {
     const { navigate } = props.navigation;

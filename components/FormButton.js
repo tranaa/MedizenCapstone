@@ -1,6 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
+// custom styled button for login and register page
 const FormButton = ({title, ...rest}) => {
   return (
     <TouchableOpacity style={styles.buttonContainer} {...rest}>

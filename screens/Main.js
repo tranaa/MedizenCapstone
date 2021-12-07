@@ -15,13 +15,9 @@ import SearchScreen from './main/Search'
 
 const Tab = createMaterialBottomTabNavigator();
 
-const EmptyScreen = () => {
-    return (null)
-}
+// main component of the application that handles the rendering of the navigation bar, provides navigation to those tabs and theme for the application
 
 export class Main extends Component {
-
-
     componentDidMount() {
         this.props.clearData();
         this.props.fetchUser();
@@ -92,7 +88,7 @@ export class Main extends Component {
         )
     }
 }
-
+// connect component state to redux store state
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     posts: store.userState.posts,
